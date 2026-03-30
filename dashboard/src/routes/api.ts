@@ -22,8 +22,8 @@ api.get("/kpis", (c) => {
       CASE WHEN SUM(clicks) > 0 THEN SUM(spend) / SUM(clicks) ELSE NULL END as cpc,
       CASE WHEN SUM(impressions) > 0 THEN SUM(spend) * 1000.0 / SUM(impressions) ELSE NULL END as cpm
     FROM account_snapshots
-    WHERE date >= date('now', '-${days} days')
-  `).get() as any;
+    WHERE date >= date('now', ? || ' days')
+  `).get(`-${days}`) as any;
 
   const previous = db.query(`
     SELECT
@@ -32,8 +32,8 @@ api.get("/kpis", (c) => {
       CASE WHEN SUM(leads) > 0 THEN SUM(spend) / SUM(leads) ELSE NULL END as cpl,
       CASE WHEN SUM(impressions) > 0 THEN SUM(clicks) * 100.0 / SUM(impressions) ELSE 0 END as ctr
     FROM account_snapshots
-    WHERE date >= date('now', '-${days * 2} days') AND date < date('now', '-${days} days')
-  `).get() as any;
+    WHERE date >= date('now', ? || ' days') AND date < date('now', ? || ' days')
+  `).get(`-${days * 2}`, `-${days}`) as any;
 
   return c.json({
     current,
@@ -56,9 +56,9 @@ api.get("/kpis/trends", (c) => {
   const rows = db.query(`
     SELECT date, spend, impressions, clicks, reach, leads, cpl, ctr, video_views
     FROM account_snapshots
-    WHERE date >= date('now', '-${days} days')
+    WHERE date >= date('now', ? || ' days')
     ORDER BY date ASC
-  `).all();
+  `).all(`-${days}`);
 
   return c.json(rows);
 });
@@ -90,12 +90,12 @@ api.get("/leads", (c) => {
   const db = getDb();
   const status = c.req.query("status");
 
-  let query = "SELECT * FROM leads ORDER BY created_at DESC";
+  let rows;
   if (status) {
-    query = `SELECT * FROM leads WHERE status = '${status}' ORDER BY created_at DESC`;
+    rows = db.query("SELECT * FROM leads WHERE status = ? ORDER BY created_at DESC").all(status);
+  } else {
+    rows = db.query("SELECT * FROM leads ORDER BY created_at DESC").all();
   }
-
-  const rows = db.query(query).all();
 
   // Summary counts
   const counts = db.query(`
@@ -319,6 +319,114 @@ api.get("/google/drive/list", async (c) => {
     { headers: { Authorization: `Bearer ${row.access_token}` } }
   );
   return c.json(await resp.json());
+});
+
+// ---- Tasks (Kanban) ----
+
+// List tasks, optionally filter by status
+api.get("/tasks", (c) => {
+  const db = getDb();
+  const status = c.req.query("status");
+
+  let rows;
+  if (status) {
+    rows = db.query(
+      "SELECT * FROM tasks WHERE status = ? ORDER BY CASE priority WHEN 'P0' THEN 0 WHEN 'P1' THEN 1 ELSE 2 END, created_at DESC"
+    ).all(status);
+  } else {
+    rows = db.query(
+      "SELECT * FROM tasks ORDER BY CASE priority WHEN 'P0' THEN 0 WHEN 'P1' THEN 1 ELSE 2 END, created_at DESC"
+    ).all();
+  }
+
+  return c.json(rows);
+});
+
+// Create task
+api.post("/tasks", async (c) => {
+  const body = await c.req.json();
+  const db = getDb();
+
+  const title = body.title?.trim();
+  if (!title) return c.json({ error: "Title is required" }, 400);
+
+  const now = new Date().toISOString();
+  const priority = ["P0", "P1", "P2"].includes(body.priority) ? body.priority : "P2";
+  const category = body.category || null;
+  const description = body.description || null;
+
+  const result = db.run(
+    "INSERT INTO tasks (title, description, status, priority, category, created_at, updated_at) VALUES (?, ?, 'todo', ?, ?, ?, ?)",
+    [title, description, priority, category, now, now]
+  );
+
+  const task = db.query("SELECT * FROM tasks WHERE id = ?").get(result.lastInsertRowid);
+  return c.json(task, 201);
+});
+
+// Update task
+api.patch("/tasks/:id", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json();
+  const db = getDb();
+
+  const existing = db.query("SELECT * FROM tasks WHERE id = ?").get(id) as any;
+  if (!existing) return c.json({ error: "Task not found" }, 404);
+
+  const now = new Date().toISOString();
+  const updates: string[] = [];
+  const values: any[] = [];
+
+  if (body.title !== undefined) {
+    updates.push("title = ?");
+    values.push(body.title.trim());
+  }
+  if (body.description !== undefined) {
+    updates.push("description = ?");
+    values.push(body.description);
+  }
+  if (body.status !== undefined && ["todo", "doing", "done"].includes(body.status)) {
+    updates.push("status = ?");
+    values.push(body.status);
+    // Auto-set completed_at when moving to done
+    if (body.status === "done") {
+      updates.push("completed_at = ?");
+      values.push(now);
+    } else {
+      updates.push("completed_at = NULL");
+    }
+  }
+  if (body.priority !== undefined && ["P0", "P1", "P2"].includes(body.priority)) {
+    updates.push("priority = ?");
+    values.push(body.priority);
+  }
+  if (body.category !== undefined) {
+    updates.push("category = ?");
+    values.push(body.category);
+  }
+
+  if (updates.length === 0) return c.json({ error: "No valid fields to update" }, 400);
+
+  updates.push("updated_at = ?");
+  values.push(now);
+  values.push(id);
+
+  db.run(`UPDATE tasks SET ${updates.join(", ")} WHERE id = ?`, values);
+
+  const updated = db.query("SELECT * FROM tasks WHERE id = ?").get(id);
+  return c.json(updated);
+});
+
+// Delete task
+api.delete("/tasks/:id", (c) => {
+  const id = c.req.param("id");
+  const db = getDb();
+
+  const existing = db.query("SELECT * FROM tasks WHERE id = ?").get(id);
+  if (!existing) return c.json({ error: "Task not found" }, 404);
+
+  db.run("DELETE FROM tasks WHERE id = ?", [id]);
+  return c.json({ ok: true });
 });
 
 function calcChange(current: number | null, previous: number | null): number | null {

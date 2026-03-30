@@ -27,6 +27,28 @@ cap: 40 lines
 - Always provide 3 variations with different angles
 - Note which past pattern each variation is based on
 - Never use generic marketing language
+- CRITICAL: Juan must capture BEFORE shots every shoot — it's the #1 content gap
+- Client reactions/testimonials = highest-converting format across all detailing accounts
+- Dedicated reveal shot needed every shoot (tight-to-wide, 5-10s)
+- ASMR natural audio (foam, vacuum, water) drives saves — capture clean audio on at least 2 vids per shoot
+- Custom/personalised plates = comment magnets, always feature them
+
+## Social media posting
+- Best times: Tue-Thu 7-9pm AEST, Sat 11am-1pm
+- Teaser reel → hero reel → carousel → process reel cadence works well
+- Interactive story stickers (polls, quizzes, question boxes) boost engagement
+- Only boost Reels, never carousels or stories
+- Retarget warm audiences on third boosted reel (lower budget, higher intent)
+- IMPORTANT: Monarch does NOT have own power/water — customer provides. Never mention this as a selling point.
+
+## B2B creative
+- B2B pitch deck created 2026-03-31 for body shops, dealerships, real estate agencies (Gold Coast)
+- Key angle: "$20-30K repair, $199 detail = rounding error but transforms handover experience"
+- Volume tiers: Standard (1-3), Growth 10% (4-7), Partner 15% (8-12), Premier 20%+dedicated day (13+)
+- Terms: monthly invoicing, 14-day payment, no lock-in
+- Free trial detail as CTA — low friction entry point
+- Customer-facing name is Harry, not Braj
+- CRITICAL: Do NOT mention own power/water — Monarch requires customer site access for both
 
 ## Pricing in creative (Service Menu v2.1 — March 2026)
 - Signature Detail: $199 sedan / $219 SUV (confirmed v2.1)

@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monarch Detailing — B2B Partnership</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #1a1a1a;
+    color: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto;
+    padding: 0;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .page:last-child {
+    page-break-after: auto;
+  }
+
+  /* ===== COVER PAGE ===== */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 50px;
+    background: linear-gradient(170deg, #1a1a1a 0%, #111111 50%, #1a1a1a 100%);
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(212, 175, 55, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cover-border {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    pointer-events: none;
+  }
+
+  .cover-border-inner {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    right: 25px;
+    bottom: 25px;
+    border: 0.5px solid rgba(212, 175, 55, 0.08);
+    pointer-events: none;
+  }
+
+  .crown-logo {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .crown-logo svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cover h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #D4AF37;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover .brand-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover .divider {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover .tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover .bottom-bar {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    z-index: 1;
+  }
+
+  .cover .bottom-bar span {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .cover .bottom-bar .dot {
+    width: 3px;
+    height: 3px;
+    background: #D4AF37;
+    border-radius: 50%;
+  }
+
+  /* ===== INNER PAGES ===== */
+  .inner {
+    padding: 55px 55px 50px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  }
+
+  .page-header .logo-small {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #D4AF37;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .page-header .page-num {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 2px;
+  }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #D4AF37;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 35px;
+  }
+
+  .section-title em {
+    color: #D4AF37;
+    font-style: normal;
+  }
+
+  .lead-text {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 35px;
+    max-width: 480px;
+  }
+
+  .lead-text strong {
+    color: #D4AF37;
+    font-weight: 600;
+  }
+
+  /* Feature list */
+  .feature-list {
+    list-style: none;
+    margin-bottom: 30px;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+  }
+
+  .feature-list li:last-child {
+    border-bottom: none;
+  }
+
+  .feature-icon {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #D4AF37;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.03) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 8px;
+    padding: 28px 30px;
+    margin-top: 15px;
+  }
+
+  .highlight-box p {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .highlight-box .stat {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #D4AF37;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .highlight-box .stat-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 1px;
+  }
+
+  /* ===== SERVICES TABLE ===== */
+  .services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .service-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 22px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+
+  .service-card.featured {
+    border-color: rgba(212, 175, 55, 0.3);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.06) 0%, rgba(212, 175, 55, 0.02) 100%);
+  }
+
+  .service-card .service-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+
+  .service-card.featured .service-name {
+    color: #D4AF37;
+  }
+
+  .service-card .service-desc {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.4;
+  }
+
+  .service-card .service-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #D4AF37;
+    background: rgba(212, 175, 55, 0.12);
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+  }
+
+  .service-card .service-price {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .service-card .price-main {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .service-card .price-from {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.4);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .service-card .price-suv {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .custom-note {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  /* ===== VOLUME PRICING ===== */
+  .tier-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+
+  .tier-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 22px 26px;
+  }
+
+  .tier-card.best {
+    border-color: rgba(212, 175, 55, 0.35);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.02) 100%);
+  }
+
+  .tier-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.12);
+    min-width: 50px;
+  }
+
+  .tier-card.best .tier-number {
+    color: rgba(212, 175, 55, 0.3);
+  }
+
+  .tier-info {
+    flex: 1;
+  }
+
+  .tier-info .tier-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 3px;
+  }
+
+  .tier-info .tier-desc {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .tier-discount {
+    text-align: right;
+  }
+
+  .tier-discount .discount-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #D4AF37;
+  }
+
+  .tier-discount .discount-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Terms */
+  .terms-row {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+  }
+
+  .term-card {
+    flex: 1;
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    border-radius: 8px;
+    padding: 20px 22px;
+    text-align: center;
+  }
+
+  .term-card .term-icon {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #D4AF37;
+  }
+
+  .term-card .term-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+
+  .term-card .term-desc {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.4;
+  }
+
+  /* ===== WHY MONARCH ===== */
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .why-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 24px 22px;
+  }
+
+  .why-card .why-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    color: #D4AF37;
+    font-size: 16px;
+  }
+
+  .why-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 6px;
+  }
+
+  .why-card p {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.5;
+  }
+
+  /* ===== CTA PAGE ===== */
+  .cta-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 55px;
+    background: linear-gradient(170deg, #1a1a1a 0%, #111111 50%, #1a1a1a 100%);
+  }
+
+  .cta-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cta-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+    margin: 30px auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-page .cta-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-page .cta-headline em {
+    color: #D4AF37;
+    font-style: normal;
+  }
+
+  .cta-page .cta-sub {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .contact-block {
+    position: relative;
+    z-index: 1;
+    background: rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    padding: 40px 50px;
+    margin-bottom: 40px;
+  }
+
+  .contact-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #D4AF37;
+    margin-bottom: 20px;
+  }
+
+  .contact-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .contact-item {
+    text-align: center;
+  }
+
+  .contact-item .contact-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+    margin-bottom: 5px;
+  }
+
+  .contact-item .contact-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: #ffffff;
+  }
+
+  .contact-item .contact-value a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .cta-footer-note {
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.35);
+    line-height: 1.6;
+    max-width: 380px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-bottom-bar {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .cta-bottom-bar span {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Print optimisation */
+  @media print {
+    body {
+      background: #1a1a1a;
+    }
+    .page {
+      margin: 0;
+      box-shadow: none;
+    }
+  }
+
+  /* Screen display */
+  @media screen {
+    .page {
+      margin: 20px auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1 — COVER ==================== -->
+<div class="page cover">
+  <div class="cover-border"></div>
+  <div class="cover-border-inner"></div>
+
+  <div class="crown-logo">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#D4AF37"/>
+          <stop offset="50%" stop-color="#F5D668"/>
+          <stop offset="100%" stop-color="#D4AF37"/>
+        </linearGradient>
+      </defs>
+      <!-- Crown shape -->
+      <path d="M15 65 L15 35 L30 50 L50 20 L70 50 L85 35 L85 65 Z" stroke="url(#goldGrad)" stroke-width="2" fill="none"/>
+      <!-- Crown base -->
+      <line x1="15" y1="70" x2="85" y2="70" stroke="url(#goldGrad)" stroke-width="2"/>
+      <!-- Crown jewels -->
+      <circle cx="50" cy="32" r="3" fill="url(#goldGrad)"/>
+      <circle cx="30" cy="47" r="2.5" fill="url(#goldGrad)"/>
+      <circle cx="70" cy="47" r="2.5" fill="url(#goldGrad)"/>
+      <!-- M shape integrated -->
+      <path d="M30 85 L30 75 L40 82 L50 75 L60 82 L70 75 L70 85" stroke="url(#goldGrad)" stroke-width="2" fill="none"/>
+    </svg>
+  </div>
+
+  <h1>Monarch</h1>
+  <div class="brand-sub">Detailing</div>
+
+  <div class="divider"></div>
+
+  <h2>Premium Mobile Detailing<br>for Your Business</h2>
+  <p class="tagline">Partner with Gold Coast's premium mobile detailing service</p>
+
+  <div class="bottom-bar">
+    <span>Gold Coast</span>
+    <div class="dot"></div>
+    <span>Brisbane</span>
+    <div class="dot"></div>
+    <span>Mobile</span>
+  </div>
+</div>
+
+<!-- ==================== PAGE 2 — THE OPPORTUNITY ==================== -->
+<div class="page inner">
+  <div class="page-header">
+    <span class="logo-small">Monarch Detailing</span>
+    <span class="page-num">02</span>
+  </div>
+
+  <div class="section-label">The Opportunity</div>
+  <div class="section-title">You invest $20&ndash;30K in every repair.<br>A <em>$199 detail</em> before handover<br>transforms the customer experience.</div>
+
+  <p class="lead-text">Your customers hand you their most prized possession. They expect it back in <strong>better condition than they remember</strong>. A professional detail at handover is the difference between a satisfied customer and a raving fan.</p>
+
+  <ul class="feature-list">
+    <li>
+      <div class="feature-icon">&#10003;</div>
+      <div><strong style="color:#fff;">Your customers expect perfection.</strong> A $30K repair deserves a showroom-quality handover &mdash; not hand-wipe marks and workshop dust.</div>
+    </li>
+    <li>
+      <div class="feature-icon">&#9733;</div>
+      <div><strong style="color:#fff;">A freshly detailed car equals 5-star Google reviews.</strong> That first impression at pickup drives word-of-mouth and repeat business.</div>
+    </li>
+    <li>
+      <div class="feature-icon">&#9881;</div>
+      <div><strong style="color:#fff;">We handle the detail so your team stays focused on repairs.</strong> No pulling your techs off the floor. We arrive, deliver, and leave.</div>
+    </li>
+    <li>
+      <div class="feature-icon">&#9992;</div>
+      <div><strong style="color:#fff;">Fully mobile &mdash; we come to your workshop.</strong> No drop-offs. No logistics. We work around your schedule.</div>
+    </li>
+  </ul>
+
+  <div class="highlight-box">
+    <p><span class="stat">$199</span>
+    <span class="stat-label">Starting cost per detail &mdash; a fraction of your average repair value. Small investment. Massive impact on customer satisfaction and your reputation.</span></p>
+  </div>
+</div>
+
+<!-- ==================== PAGE 3 — SERVICES ==================== -->
+<div class="page inner">
+  <div class="page-header">
+    <span class="logo-small">Monarch Detailing</span>
+    <span class="page-num">03</span>
+  </div>
+
+  <div class="section-label">Services for Business</div>
+  <div class="section-title">Tailored packages for<br><em>every handover scenario</em></div>
+
+  <div class="services-grid">
+    <div class="service-card featured">
+      <div>
+        <div class="service-name">Signature Detail<span class="service-badge">Most Popular</span></div>
+        <div class="service-desc">Complete inside &amp; out transformation. 2&ndash;3 hours. Foam wash, hand dry, full interior vacuum &amp; wipe, spray sealant.</div>
+      </div>
+      <div class="service-price">
+        <span class="price-from">From</span>
+        <span class="price-main">$199</span>
+        <span class="price-suv">SUV / Wagon: $219</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div>
+        <div class="service-name">Executive Detail</div>
+        <div class="service-desc">Deep restoration &amp; new-car feeling. 4&ndash;5 hours. Clay bar decontamination, carpet extraction, leather conditioning, odour elimination.</div>
+      </div>
+      <div class="service-price">
+        <span class="price-from">From</span>
+        <span class="price-main">$499</span>
+        <span class="price-suv">SUV / Wagon: $549</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div>
+        <div class="service-name">Paint Correction</div>
+        <div class="service-desc">1-stage machine polish. Removes 60&ndash;70% of swirl marks &amp; defects. Ideal for post-repair paint refinement.</div>
+      </div>
+      <div class="service-price">
+        <span class="price-from">From</span>
+        <span class="price-main">$549</span>
+        <span class="price-suv">SUV: $649</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div>
+        <div class="service-name">Pre-Sale Prep</div>
+        <div class="service-desc">Showroom-ready finish. 5&ndash;5.5 hours. Everything in Executive plus engine bay detail, paint enhancement, photo-ready finish.</div>
+      </div>
+      <div class="service-price">
+        <span class="price-from">From</span>
+        <span class="price-main">$699</span>
+        <span class="price-suv">SUV / Wagon: $799</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="custom-note">Custom packages available for volume accounts. Pricing includes GST.</p>
+</div>
+
+<!-- ==================== PAGE 4 — VOLUME PRICING ==================== -->
+<div class="page inner">
+  <div class="page-header">
+    <span class="logo-small">Monarch Detailing</span>
+    <span class="page-num">04</span>
+  </div>
+
+  <div class="section-label">Volume Pricing</div>
+  <div class="section-title">The more you send,<br>the <em>more you save</em></div>
+
+  <p class="lead-text">Simple, transparent tiered pricing. No lock-in contracts. Scale up or down as your workflow demands.</p>
+
+  <div class="tier-grid">
+    <div class="tier-card">
+      <div class="tier-number">01</div>
+      <div class="tier-info">
+        <div class="tier-name">Standard</div>
+        <div class="tier-desc">1&ndash;3 vehicles per month</div>
+      </div>
+      <div class="tier-discount">
+        <div class="discount-value">&mdash;</div>
+        <div class="discount-label">Standard rates</div>
+      </div>
+    </div>
+
+    <div class="tier-card">
+      <div class="tier-number">02</div>
+      <div class="tier-info">
+        <div class="tier-name">Growth</div>
+        <div class="tier-desc">4&ndash;7 vehicles per month</div>
+      </div>
+      <div class="tier-discount">
+        <div class="discount-value">10%</div>
+        <div class="discount-label">Off all services</div>
+      </div>
+    </div>
+
+    <div class="tier-card best">
+      <div class="tier-number">03</div>
+      <div class="tier-info">
+        <div class="tier-name">Partner</div>
+        <div class="tier-desc">8&ndash;12 vehicles per month</div>
+      </div>
+      <div class="tier-discount">
+        <div class="discount-value">15%</div>
+        <div class="discount-label">Off all services</div>
+      </div>
+    </div>
+
+    <div class="tier-card best">
+      <div class="tier-number">04</div>
+      <div class="tier-info">
+        <div class="tier-name">Premier</div>
+        <div class="tier-desc">13+ vehicles per month &mdash; includes a dedicated service day</div>
+      </div>
+      <div class="tier-discount">
+        <div class="discount-value">20%</div>
+        <div class="discount-label">Off + dedicated day</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="terms-row">
+    <div class="term-card">
+      <div class="term-title">Monthly Invoicing</div>
+      <div class="term-desc">One consolidated invoice at month-end. No per-job paperwork.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-title">14-Day Terms</div>
+      <div class="term-desc">Standard 14-day payment terms. No upfront payment required.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-title">No Lock-In</div>
+      <div class="term-desc">Month-to-month. Scale up or down as needed. Zero commitment risk.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 5 — WHY MONARCH ==================== -->
+<div class="page inner">
+  <div class="page-header">
+    <span class="logo-small">Monarch Detailing</span>
+    <span class="page-num">05</span>
+  </div>
+
+  <div class="section-label">The Monarch Difference</div>
+  <div class="section-title">Why leading workshops<br>choose <em>Monarch</em></div>
+
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">&#9830;</div>
+      <h4>Premium Positioning</h4>
+      <p>We are not a $30 car wash. Our service reflects the standard your prestige customers expect. Your reputation, elevated.</p>
+    </div>
+
+    <div class="why-card">
+      <div class="why-icon">&#9658;</div>
+      <h4>Fully Mobile</h4>
+      <p>We come to your workshop with everything we need. Zero disruption to your operations. No drop-off logistics.</p>
+    </div>
+
+    <div class="why-card">
+      <div class="why-icon">&#9632;</div>
+      <h4>Insured &amp; Professional</h4>
+      <p>Full public liability insurance. Professional, uniformed team. We treat every vehicle like our own.</p>
+    </div>
+
+    <div class="why-card">
+      <div class="why-icon">&#10003;</div>
+      <h4>Consistent Quality</h4>
+      <p>Documented SOPs and a trained team mean every car gets the same exceptional result. No guesswork.</p>
+    </div>
+
+    <div class="why-card">
+      <div class="why-icon">&#9734;</div>
+      <h4>Before &amp; After Documentation</h4>
+      <p>Professional photo documentation of every detail. Use them for your own social media or customer handover records.</p>
+    </div>
+
+    <div class="why-card">
+      <div class="why-icon">&#9200;</div>
+      <h4>Flexible Scheduling</h4>
+      <p>We work around your workshop hours. Early starts, late finishes, weekends &mdash; whatever suits your handover schedule.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <p style="text-align:center; font-size:16px; font-weight:400; color:rgba(255,255,255,0.7);">
+      <strong style="color:#D4AF37;">"A detail before handover costs you $199.</strong><br>
+      A bad Google review from a dusty dashboard costs you thousands."
+    </p>
+  </div>
+</div>
+
+<!-- ==================== PAGE 6 — NEXT STEPS ==================== -->
+<div class="page cta-page">
+  <div class="cover-border"></div>
+  <div class="cover-border-inner"></div>
+
+  <div class="crown-logo" style="position:relative; z-index:1;">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#D4AF37"/>
+          <stop offset="50%" stop-color="#F5D668"/>
+          <stop offset="100%" stop-color="#D4AF37"/>
+        </linearGradient>
+      </defs>
+      <path d="M15 65 L15 35 L30 50 L50 20 L70 50 L85 35 L85 65 Z" stroke="url(#goldGrad2)" stroke-width="2" fill="none"/>
+      <line x1="15" y1="70" x2="85" y2="70" stroke="url(#goldGrad2)" stroke-width="2"/>
+      <circle cx="50" cy="32" r="3" fill="url(#goldGrad2)"/>
+      <circle cx="30" cy="47" r="2.5" fill="url(#goldGrad2)"/>
+      <circle cx="70" cy="47" r="2.5" fill="url(#goldGrad2)"/>
+      <path d="M30 85 L30 75 L40 82 L50 75 L60 82 L70 75 L70 85" stroke="url(#goldGrad2)" stroke-width="2" fill="none"/>
+    </svg>
+  </div>
+
+  <div class="cta-divider"></div>
+
+  <div class="cta-headline">Let's start with a<br><em>trial detail &mdash; on us.</em></div>
+  <p class="cta-sub">Experience the Monarch standard firsthand. No obligation.</p>
+
+  <div class="contact-block">
+    <div class="contact-name">Harry</div>
+    <div class="contact-row">
+      <div class="contact-item">
+        <div class="contact-label">Phone</div>
+        <div class="contact-value"><a href="tel:0410409402">0410 409 402</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-label">Email</div>
+        <div class="contact-value"><a href="mailto:info@monarchdetailing.com.au">info@monarchdetailing.com.au</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-label">Web</div>
+        <div class="contact-value"><a href="https://monarchdetailing.com.au">monarchdetailing.com.au</a></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="cta-footer-note">Fully insured. ABN registered. GST inclusive pricing.<br>Servicing the Gold Coast and Brisbane.</p>
+
+  <div class="cta-bottom-bar">
+    <span>monarchdetailing.com.au</span>
+  </div>
+</div>
+
+</body>
+</html>

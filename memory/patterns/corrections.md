@@ -35,7 +35,7 @@ connected:
 - No em dash in customer messages — use regular dash
 - Skip intro for FB Marketplace inquiries
 - Always mention availability: "We've got availability tomorrow!"
-- Always say: "power and water access" (not "access to power and water")
+- 2026-03-30 | CRITICAL: We do NOT have our own power and water. Customer needs to provide access. NEVER say "we come with our own power and water" — this was WRONG in multiple customer messages and ad copy. THE RULE: Say "we just need access to power and water on-site" or "we just need a power point and tap access".
 - New customer discount: $30 off first service (Signature Detail only)
 - 2026-03-29 | ALWAYS reference service menu (business-knowledge.md) when replying to customers. Apply SUV pricing for SUVs/4WDs. Show value but keep it concise — convert, don't lecture.
 - 2026-03-29 | Don't assume Signature Detail. Listen to what the customer actually asks for and match the right service. If they ask for cut & polish = paint correction (needs inspection). If they ask inside/out = Signature Detail. If they ask for both, quote each separately.
@@ -48,7 +48,7 @@ connected:
 - Never claim capabilities not possessed (Jarvis claimed it could watch videos — it couldn't)
 - Route specialist work to sub-agents, don't do it directly
 - Operational fixes don't need approval — just do them
-- Customer messages: draft and show before sending
+- Customer messages: draft and show before sending. Always include at least 1 emoji.
 - 2026-03-30 | DO NOT send email confirmations to customers. Jobber confirmations = manual via UI only. FRIDAY branded emails = NOT approved for customer-facing sends. Draft only, never send without explicit approval.
 - 2026-03-28 | Telegram line break bug: Claude Code channel handler may truncate messages after line breaks. If a Telegram message seems incomplete, ask the user to resend the rest or send as separate messages. Use Shift+Enter for line breaks on Telegram.
 - 2026-03-29 | Telegram scheduler one-shot jobs don't fire reliably (runCount stays 0). THE RULE: For urgent/immediate Telegram sends, use direct Bot API call via curl instead of mcp__telegram_scheduler__schedule_job with one-shot. Scheduler is fine for recurring jobs.

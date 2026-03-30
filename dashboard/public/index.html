@@ -384,6 +384,41 @@
     .k-card.bl-gold { border-left-color: var(--gold); }
     .k-card.bl-orange { border-left-color: var(--orange); }
 
+    /* ========== KANBAN ACTIONS ========== */
+    .k-move-btn, .k-back-btn, .k-del-btn {
+      margin-left: auto;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 2px 7px;
+      cursor: pointer;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+    .k-move-btn:hover { background: var(--gold-dim); color: var(--gold); border-color: var(--gold); }
+    .k-move-done:hover { background: rgba(34,197,94,0.12); color: var(--green); border-color: var(--green); }
+    .k-back-btn:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+    .k-del-btn { font-size: 14px; padding: 1px 6px; }
+    .k-del-btn:hover { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+
+    /* Category pills */
+    .cat-pill {
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .cat-monarch { background: rgba(212,175,55,0.12); color: var(--gold); }
+    .cat-mission-control { background: rgba(59,130,246,0.12); color: #60a5fa; }
+    .cat-highline { background: rgba(168,85,247,0.12); color: #a855f7; }
+    .cat-detailer-erp { background: rgba(34,197,94,0.12); color: var(--green); }
+    .cat-personal { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+    .cat-none { background: rgba(255,255,255,0.04); color: var(--text-muted); }
+
     /* ========== KPI CARDS ========== */
     .kpi-row {
       display: grid;
@@ -997,6 +1032,37 @@
               <div class="card-hdr">
                 <span class="card-title">Task Board</span>
                 <span class="card-badge badge-grey" x-text="tasks.todo.length + tasks.doing.length + tasks.done.length + ' tasks'"></span>
+                <button class="btn-add-task" @click="showTaskForm = !showTaskForm" style="margin-left:auto;background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                  + Add Task
+                </button>
+              </div>
+              <!-- Add Task Form -->
+              <div x-show="showTaskForm" x-transition style="background:var(--bg-kanban-col);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px;">
+                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:end;">
+                  <div>
+                    <label style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Title</label>
+                    <input x-model="newTask.title" type="text" placeholder="Task title..." style="width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-size:13px;outline:none;" @keydown.enter="createTask()">
+                  </div>
+                  <div>
+                    <label style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Priority</label>
+                    <select x-model="newTask.priority" style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-size:13px;outline:none;cursor:pointer;">
+                      <option value="P0">P0</option>
+                      <option value="P1">P1</option>
+                      <option value="P2" selected>P2</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Category</label>
+                    <select x-model="newTask.category" style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-size:13px;outline:none;cursor:pointer;">
+                      <option value="monarch">Monarch</option>
+                      <option value="mission-control">Mission Control</option>
+                      <option value="highline">Highline</option>
+                      <option value="detailer-erp">Detailer ERP</option>
+                      <option value="personal">Personal</option>
+                    </select>
+                  </div>
+                  <button @click="createTask()" style="background:var(--gold);color:#111;border:none;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Create</button>
+                </div>
               </div>
               <div class="kanban kanban-3">
                 <!-- TO DO -->
@@ -1005,12 +1071,14 @@
                     To Do <span class="kanban-col-count" x-text="tasks.todo.length"></span>
                   </div>
                   <div class="scroll-y">
-                    <template x-for="t in tasks.todo" :key="t.title">
+                    <template x-for="t in tasks.todo" :key="t.id">
                       <div class="k-card" :class="'bl-' + prioColor(t.priority)">
                         <div class="k-card-title" x-text="t.title"></div>
                         <div class="k-card-meta">
                           <span class="priority-badge" :class="'priority-' + t.priority.toLowerCase()" x-text="t.priority"></span>
-                          <span x-text="t.date"></span>
+                          <span class="cat-pill" :class="'cat-' + (t.category || 'none')" x-text="catLabel(t.category)"></span>
+                          <button class="k-move-btn" @click="moveTask(t.id, 'doing')" title="Start">&#9654;</button>
+                          <button class="k-del-btn" @click="deleteTask(t.id)" title="Delete">&times;</button>
                         </div>
                       </div>
                     </template>
@@ -1018,16 +1086,18 @@
                 </div>
                 <!-- DOING -->
                 <div class="kanban-col">
-                  <div class="kanban-col-title">
+                  <div class="kanban-col-title" style="color:var(--gold);">
                     Doing <span class="kanban-col-count" x-text="tasks.doing.length"></span>
                   </div>
                   <div class="scroll-y">
-                    <template x-for="t in tasks.doing" :key="t.title">
+                    <template x-for="t in tasks.doing" :key="t.id">
                       <div class="k-card bl-gold">
                         <div class="k-card-title" x-text="t.title"></div>
                         <div class="k-card-meta">
                           <span class="priority-badge" :class="'priority-' + t.priority.toLowerCase()" x-text="t.priority"></span>
-                          <span x-text="t.date"></span>
+                          <span class="cat-pill" :class="'cat-' + (t.category || 'none')" x-text="catLabel(t.category)"></span>
+                          <button class="k-move-btn k-move-done" @click="moveTask(t.id, 'done')" title="Complete">&#10003;</button>
+                          <button class="k-back-btn" @click="moveTask(t.id, 'todo')" title="Move back">&#9664;</button>
                         </div>
                       </div>
                     </template>
@@ -1035,16 +1105,17 @@
                 </div>
                 <!-- DONE -->
                 <div class="kanban-col">
-                  <div class="kanban-col-title">
+                  <div class="kanban-col-title" style="color:var(--green);">
                     Done <span class="kanban-col-count" x-text="tasks.done.length"></span>
                   </div>
                   <div class="scroll-y">
-                    <template x-for="t in tasks.done" :key="t.title">
+                    <template x-for="t in tasks.done.slice(0, 10)" :key="t.id">
                       <div class="k-card bl-green">
                         <div class="k-card-title" style="text-decoration:line-through;opacity:0.6" x-text="t.title"></div>
                         <div class="k-card-meta">
-                          <span class="priority-badge priority-p2" x-text="t.priority"></span>
-                          <span x-text="t.date"></span>
+                          <span class="priority-badge" :class="'priority-' + t.priority.toLowerCase()" x-text="t.priority"></span>
+                          <span class="cat-pill" :class="'cat-' + (t.category || 'none')" x-text="catLabel(t.category)"></span>
+                          <span style="font-size:10px;color:var(--text-muted);" x-text="t.completed_at ? timeAgo(t.completed_at) : ''"></span>
                         </div>
                       </div>
                     </template>
@@ -1587,34 +1658,10 @@
         { title: 'Avantguard 10yr Coating Research', sentTime: '11:00am, 29 Mar', channel: 'Telegram' },
       ],
 
-      // Task board
-      tasks: {
-        todo: [
-          { title: 'Job ad for polisher', priority: 'P1', date: '29 Mar' },
-          { title: 'Service menu PDF', priority: 'P1', date: '29 Mar' },
-          { title: 'SOP framework build', priority: 'P1', date: '29 Mar' },
-          { title: 'Pre-Sale ad campaign', priority: 'P1', date: '30 Mar' },
-          { title: 'Jeff website email', priority: 'P2', date: '30 Mar' },
-          { title: 'Jobber OAuth setup', priority: 'P0', date: '29 Mar' },
-          { title: 'WordPress access', priority: 'P2', date: '30 Mar' },
-          { title: 'GMB access', priority: 'P2', date: '30 Mar' },
-        ],
-        doing: [
-          { title: 'Mission Control v2 build', priority: 'P0', date: '29 Mar' },
-        ],
-        done: [
-          { title: 'Campaign consolidation', priority: 'P0', date: '28 Mar' },
-          { title: 'Retargeting audience', priority: 'P1', date: '28 Mar' },
-          { title: 'Service menu v2.1', priority: 'P1', date: '28 Mar' },
-          { title: 'Seat shampoo SOP', priority: 'P2', date: '27 Mar' },
-          { title: 'Paint correction SOP', priority: 'P2', date: '27 Mar' },
-          { title: 'Avantguard research', priority: 'P2', date: '27 Mar' },
-          { title: 'Drone PW research', priority: 'P2', date: '27 Mar' },
-          { title: 'ChatGPT export absorbed', priority: 'P2', date: '28 Mar' },
-          { title: 'Two-way Telegram bot', priority: 'P0', date: '28 Mar' },
-          { title: 'Compound recommendations', priority: 'P1', date: '28 Mar' },
-        ],
-      },
+      // Task board (fetched from API)
+      tasks: { todo: [], doing: [], done: [] },
+      showTaskForm: false,
+      newTask: { title: '', priority: 'P2', category: 'monarch' },
 
       todayPriorities: [
         'Jobber OAuth setup \u2014 unblock CRM integration',
@@ -1688,6 +1735,8 @@
         this.fetchWeather();
         this.connectWs();
         setInterval(() => this.fetchAll(), 60000);
+        // Refresh tasks every 30 seconds
+        setInterval(() => this.fetchTasks(), 30000);
         // Refresh weather every 15 minutes
         setInterval(() => this.fetchWeather(), 900000);
       },
@@ -1714,6 +1763,7 @@
           this.fetchTrends(),
           this.fetchTelegram(),
           this.fetchAgentActivity(),
+          this.fetchTasks(),
         ]);
         this.lastUpdated = new Date().toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
       },
@@ -1749,6 +1799,61 @@
       },
       async fetchAgentActivity() {
         try { this.agentActivity = await (await fetch('/api/agent/activity?limit=30')).json(); } catch(e) { console.error('Activity:', e); }
+      },
+
+      // ===== TASKS =====
+      async fetchTasks() {
+        try {
+          const all = await (await fetch('/api/tasks')).json();
+          this.tasks = {
+            todo: all.filter(t => t.status === 'todo'),
+            doing: all.filter(t => t.status === 'doing'),
+            done: all.filter(t => t.status === 'done'),
+          };
+        } catch(e) { console.error('Tasks:', e); }
+      },
+
+      async createTask() {
+        if (!this.newTask.title.trim()) return;
+        try {
+          await fetch('/api/tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(this.newTask),
+          });
+          this.newTask = { title: '', priority: 'P2', category: 'monarch' };
+          this.showTaskForm = false;
+          await this.fetchTasks();
+        } catch(e) { console.error('Create task:', e); }
+      },
+
+      async moveTask(id, newStatus) {
+        try {
+          await fetch(`/api/tasks/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus }),
+          });
+          await this.fetchTasks();
+        } catch(e) { console.error('Move task:', e); }
+      },
+
+      async deleteTask(id) {
+        try {
+          await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+          await this.fetchTasks();
+        } catch(e) { console.error('Delete task:', e); }
+      },
+
+      catLabel(cat) {
+        const labels = {
+          'monarch': 'Monarch',
+          'mission-control': 'MC',
+          'highline': 'Highline',
+          'detailer-erp': 'ERP',
+          'personal': 'Personal',
+        };
+        return labels[cat] || cat || '';
       },
 
       // ===== WEATHER =====

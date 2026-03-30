@@ -110,6 +110,62 @@ function migrate(db: Database) {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS tasks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      status TEXT DEFAULT 'todo',
+      priority TEXT DEFAULT 'P2',
+      category TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      completed_at TEXT
+    )
+  `);
+
+  db.run("CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status)");
+  db.run("CREATE INDEX IF NOT EXISTS idx_tasks_priority ON tasks(priority)");
+
+  // Seed tasks if table is empty
+  const taskCount = db.query("SELECT COUNT(*) as n FROM tasks").get() as any;
+  if (taskCount.n === 0) {
+    const now = new Date().toISOString();
+    const seedTasks = [
+      // TODO
+      { title: "WordPress credentials from Braj", status: "todo", priority: "P1", category: "monarch" },
+      { title: "GMB access for local SEO", status: "todo", priority: "P1", category: "monarch" },
+      { title: "Netstar API key for Turo tracking", status: "todo", priority: "P2", category: "highline" },
+      { title: "Build micro-SOP framework", status: "todo", priority: "P1", category: "monarch" },
+      { title: "Pre-Sale ad campaign creative", status: "todo", priority: "P1", category: "monarch" },
+      { title: "B2B fleet pricing — start outreach to body shops", status: "todo", priority: "P1", category: "monarch" },
+      { title: "Instagram outreach — start manual DMs", status: "todo", priority: "P2", category: "monarch" },
+      { title: "Subscription model — finalise + add to Jobber", status: "todo", priority: "P2", category: "monarch" },
+      { title: "Detailer ERP architecture doc", status: "todo", priority: "P1", category: "detailer-erp" },
+      // DOING
+      { title: "Dynamic kanban for Mission Control", status: "doing", priority: "P0", category: "mission-control" },
+      { title: "B2B pitch document", status: "doing", priority: "P1", category: "monarch" },
+      // DONE
+      { title: "SQL injection fix in /api/leads", status: "done", priority: "P0", category: "mission-control" },
+      { title: "Campaign consolidation + retargeting", status: "done", priority: "P0", category: "monarch" },
+      { title: "Service menu v2.1 + PDF", status: "done", priority: "P0", category: "monarch" },
+      { title: "Jobber OAuth connected", status: "done", priority: "P0", category: "monarch" },
+      { title: "Google Drive connected", status: "done", priority: "P1", category: "monarch" },
+      { title: "GitHub push", status: "done", priority: "P1", category: "mission-control" },
+      { title: "Seat shampooing + paint correction SOPs", status: "done", priority: "P1", category: "monarch" },
+      { title: "MUSE social media plan for Toyota content", status: "done", priority: "P1", category: "monarch" },
+      { title: "Two-way Telegram bot", status: "done", priority: "P1", category: "mission-control" },
+      { title: "Juan content review + posting schedule", status: "done", priority: "P1", category: "monarch" },
+    ];
+
+    const insert = db.prepare(
+      "INSERT INTO tasks (title, status, priority, category, created_at, updated_at, completed_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    );
+    for (const t of seedTasks) {
+      insert.run(t.title, t.status, t.priority, t.category, now, now, t.status === "done" ? now : null);
+    }
+  }
+
   // Indexes for common queries
   db.run("CREATE INDEX IF NOT EXISTS idx_telegram_ts ON telegram_messages(timestamp)");
   db.run("CREATE INDEX IF NOT EXISTS idx_ad_snapshots_date ON ad_snapshots(date)");

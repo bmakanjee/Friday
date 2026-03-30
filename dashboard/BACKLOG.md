@@ -9,7 +9,8 @@
 - [DONE] Mission Control v2 dashboard rebuild — 4-tab layout (Ops/Monarch/Ventures/Agents) with sidebar nav, kanban task board, inbox feed, venture cards, agent status — 2026-03-29
 - [DONE] Mission Control v2 visual upgrade — pending approvals, for-review section, sidebar labels, gradient/glow styling, WS auto-reconnect w/ backoff, tab transitions — 2026-03-29
 - [DONE] Mission Control v2 command centre enhancements — weather widget (wttr.in), revenue tracker, daily schedule, quick stats bar, notification badges, footer status bar — 2026-03-29
-- [ ] Fix SQL injection in `/api/leads` status query — use parameterised query instead of string interpolation
+- [DONE] Fix SQL injection in `/api/leads` status query — parameterised all 4 interpolated queries in api.ts — 2026-03-31
+- [DONE] Dynamic kanban task board — tasks table + CRUD API + dynamic frontend with add/move/delete, category pills, priority badges, 30s auto-refresh, seeded with current backlog — 2026-03-31
 - [ ] Add error state UI — show user-facing errors when Meta API fails instead of silent failure
 - [ ] Lead deduplication — prevent duplicate leads if Meta returns the same lead twice across collections
 

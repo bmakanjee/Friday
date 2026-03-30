@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/bmaka/friday -type f -name *.md)",
+      "Bash(find /c/Users/bmaka/friday -type f -name *.json)",
+      "Bash(find /c/Users/bmaka/.claude/projects -type f -name *.json -o -name *.md)",
+      "Bash(find /c/Users/bmaka/OneDrive -type f -name *jarvis* -o -name *openclaw* -o -name *agent*)",
+      "Bash(ls:*)",
+      "Bash(find /c/Users/bmaka/AppData -type f -name *.md)",
+      "Bash(powershell -Command \"Get-ChildItem -Path 'C:\\\\Users\\\\bmaka' -Recurse -Filter '*jarvis*' -ErrorAction SilentlyContinue 2>/dev/null\")",
+      "Bash(cd /tmp)",
+      "Bash(tar -tzf /c/Users/bmaka/Downloads/friday-system-v2.tar.gz)",
+      "Bash(jq -r .message.content[0].text)",
+      "Bash(curl -s \"https://www.npmjs.com/search?q=telegram+mcp&ranking=popularity\")",
+      "Bash(curl:*)",
+      "Bash(node:*)",
+      "Bash(xargs grep:*)",
+      "Bash(bun --version)",
+      "Bash(claude --version)",
+      "Bash(where claude:*)",
+      "Bash(wc:*)",
+      "Bash(grep -i \"openclaw\\\\|jarvis\" /c/Users/bmaka/Downloads/mission-control-v*.html)",
+      "Bash(find /c/Users/bmaka/friday/.claude -type f -name *.md)",
+      "Bash(unzip -l /c/Users/bmaka/Downloads/b26487cbcba662c61644bc74df6d62f188c216697fe0e52babd0d32fa7af92dd-2026-03-14-05-17-28-8058c1be95224f36bf378bfa79c9a17a.zip)",
+      "Bash(find /c/Users/bmaka/Documents -type f \\\\\\(-name *.json -o -name *.md -o -name *.txt -o -name *.html \\\\\\))",
+      "Bash(unzip -l /c/Users/bmaka/Downloads/tinified.zip)",
+      "Bash(grep:*)",
+      "Bash(unzip -l C:/Users/bmaka/Downloads/b26487cbcba662c61644bc74df6d62f188c216697fe0e52babd0d32fa7af92dd-2026-03-14-05-17-28-8058c1be95224f36bf378bfa79c9a17a.zip)",
+      "Bash(find C:/Users/bmaka/friday -type f \\\\\\(-name *.md -o -name *.json \\\\\\))",
+      "Bash(find C:/Users/bmaka/.claude -type f -name *.md)"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+# Sensitive data - never sync publicly
+memory/private/
+.claude/logs/
+
+# API tokens and secrets
+.env
+*.env
+**/tokens.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
+bun.lock
+
+# Database files
+*.db
+*.db-wal
+*.db-shm
+
+# Temp files
+*.log
+
+# Uploads (user content, large)
+inbox/uploads/
+
+# ChatGPT export (300MB, private)
+inbox/chatgpt-export/
+
+# MCP config (contains API tokens)
+.mcp.json

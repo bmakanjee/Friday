@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monarch Detailing — Service Menu v2.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --black: #1a1a1a;
+    --black-deep: #111111;
+    --gold: #D4AF37;
+    --gold-light: #E8CC6A;
+    --gold-dark: #B8941E;
+    --white: #FFFFFF;
+    --white-soft: #F5F5F0;
+    --grey: #999999;
+    --grey-light: #CCCCCC;
+    --grey-dark: #666666;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ─── PAGE STRUCTURE ─── */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    background: var(--black);
+  }
+
+  .page:last-child {
+    page-break-after: auto;
+  }
+
+  .page-inner {
+    padding: 40px 50px;
+    min-height: 297mm;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ─── TYPOGRAPHY ─── */
+  h1, h2, h3, h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+
+  /* ─── GOLD DIVIDERS ─── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 20px 0;
+  }
+
+  .divider-thin {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+    margin: 12px 0;
+  }
+
+  .divider-left {
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    width: 80px;
+    margin: 10px 0 16px 0;
+  }
+
+  /* ─── FOOTER ─── */
+  .page-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    text-align: center;
+    font-size: 8.5px;
+    color: var(--grey);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+  }
+
+  .page-footer .footer-links {
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .page-footer .footer-tagline {
+    font-style: italic;
+    color: var(--grey-light);
+    margin-top: 4px;
+    font-size: 8px;
+  }
+
+  /* ─── CORNER ACCENTS ─── */
+  .corner-accent {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    pointer-events: none;
+  }
+
+  .corner-accent.top-left {
+    top: 20px;
+    left: 20px;
+    border-top: 1px solid rgba(212, 175, 55, 0.25);
+    border-left: 1px solid rgba(212, 175, 55, 0.25);
+  }
+
+  .corner-accent.top-right {
+    top: 20px;
+    right: 20px;
+    border-top: 1px solid rgba(212, 175, 55, 0.25);
+    border-right: 1px solid rgba(212, 175, 55, 0.25);
+  }
+
+  .corner-accent.bottom-left {
+    bottom: 20px;
+    left: 20px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    border-left: 1px solid rgba(212, 175, 55, 0.25);
+  }
+
+  .corner-accent.bottom-right {
+    bottom: 20px;
+    right: 20px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    border-right: 1px solid rgba(212, 175, 55, 0.25);
+  }
+
+  /* ════════════════════════════════════════
+     PAGE 1 — COVER
+     ════════════════════════════════════════ */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: radial-gradient(ellipse at center, #222222 0%, var(--black-deep) 70%);
+  }
+
+  .cover .page-inner {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cover-crown {
+    font-size: 72px;
+    margin-bottom: 30px;
+    filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.3));
+  }
+
+  .cover-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .cover-tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 50px;
+  }
+
+  .cover-divider {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 50px auto;
+  }
+
+  .cover-menu-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--white-soft);
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .cover-edition {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  .cover-bottom {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .cover-bottom-links {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .cover-bottom-mobile {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--grey);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ════════════════════════════════════════
+     PAGE 2-4 — CONTENT PAGES
+     ════════════════════════════════════════ */
+  .section-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .section-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .section-header .section-sub {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey);
+    font-weight: 400;
+  }
+
+  /* ─── PACKAGE CARDS ─── */
+  .package {
+    margin-bottom: 22px;
+    padding: 22px 26px;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 4px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.03) 0%, transparent 60%);
+    position: relative;
+  }
+
+  .package.featured {
+    border-color: rgba(212, 175, 55, 0.4);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.07) 0%, transparent 60%);
+  }
+
+  .package-badge {
+    position: absolute;
+    top: -1px;
+    right: 24px;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 7.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .package-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+
+  .package-subtitle {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    font-weight: 300;
+  }
+
+  .package-pricing {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 14px;
+  }
+
+  .price-item {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .price-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--grey);
+    font-weight: 500;
+  }
+
+  .price-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .price-duration {
+    font-size: 9px;
+    color: var(--grey);
+    font-weight: 400;
+    margin-left: 2px;
+  }
+
+  .package-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .detail-column h4 {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+  }
+
+  .detail-column ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .detail-column li {
+    font-size: 8.5px;
+    line-height: 1.6;
+    color: var(--grey-light);
+    padding-left: 10px;
+    position: relative;
+  }
+
+  .detail-column li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5.5px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+
+  /* ─── UPGRADE BLOCK ─── */
+  .upgrade-block {
+    margin-top: 4px;
+    padding: 10px 16px;
+    background: rgba(212, 175, 55, 0.05);
+    border-left: 2px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .upgrade-label {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .upgrade-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .upgrade-list li {
+    font-size: 8.5px;
+    color: var(--grey-light);
+    line-height: 1.6;
+    padding-left: 10px;
+    position: relative;
+  }
+
+  .upgrade-list li::before {
+    content: '+';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 9px;
+  }
+
+  /* ─── PAINT CORRECTION ─── */
+  .paint-package {
+    margin-bottom: 18px;
+    padding: 20px 24px;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 4px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.03) 0%, transparent 60%);
+  }
+
+  .paint-package-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .paint-package-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+
+  .paint-package-sub {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--gold-light);
+    font-weight: 300;
+  }
+
+  .paint-defect {
+    text-align: right;
+  }
+
+  .defect-pct {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .defect-label {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--grey);
+  }
+
+  .paint-pricing {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .paint-includes {
+    font-size: 8.5px;
+    color: var(--grey-light);
+    line-height: 1.6;
+  }
+
+  .paint-includes span {
+    color: var(--grey);
+  }
+
+  /* ─── CERAMIC BLOCK ─── */
+  .ceramic-block {
+    margin-top: 4px;
+    padding: 24px;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 4px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.02) 100%);
+    text-align: center;
+  }
+
+  .ceramic-block h3 {
+    font-size: 20px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .ceramic-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .ceramic-price span {
+    font-size: 14px;
+    color: var(--grey);
+    font-weight: 400;
+  }
+
+  .ceramic-features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+
+  .ceramic-feature {
+    font-size: 9px;
+    color: var(--grey-light);
+    letter-spacing: 0.04em;
+  }
+
+  .ceramic-feature::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* ─── ADD-ONS ─── */
+  .addons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .addon-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .addon-section .addon-sub {
+    font-size: 9px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .addon-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .addon-item:last-child {
+    border-bottom: none;
+  }
+
+  .addon-name {
+    font-size: 10.5px;
+    color: var(--white-soft);
+    font-weight: 400;
+  }
+
+  .addon-dots {
+    flex: 1;
+    margin: 0 10px;
+    border-bottom: 1px dotted rgba(212, 175, 55, 0.2);
+    min-width: 20px;
+    height: 10px;
+  }
+
+  .addon-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* ─── COMPARISON TABLE ─── */
+  .reference-section {
+    margin-bottom: 24px;
+  }
+
+  .reference-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9px;
+  }
+
+  table thead th {
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    padding: 8px 6px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    text-align: center;
+  }
+
+  table thead th:first-child {
+    text-align: left;
+  }
+
+  table tbody td {
+    padding: 6px 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    text-align: center;
+    color: var(--grey-light);
+    font-size: 8.5px;
+  }
+
+  table tbody td:first-child {
+    text-align: left;
+    color: var(--white-soft);
+    font-weight: 400;
+  }
+
+  table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .check {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .dash {
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 10px;
+  }
+
+  .price-table .price-cell {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .price-table .package-header-cell {
+    font-weight: 700;
+    color: var(--white);
+    font-size: 9px;
+  }
+
+  /* ─── NEW BADGE ─── */
+  .new-tag {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* ─── PAGE NUMBER ─── */
+  .page-number {
+    position: absolute;
+    bottom: 22px;
+    right: 50px;
+    font-size: 8px;
+    color: rgba(212, 175, 55, 0.3);
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── PRINT MEDIA ─── */
+  @media print {
+    body { background: var(--black); }
+    .page { margin: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 1 — COVER
+     ════════════════════════════════════════════════════════════ -->
+<div class="page cover">
+  <div class="corner-accent top-left"></div>
+  <div class="corner-accent top-right"></div>
+  <div class="corner-accent bottom-left"></div>
+  <div class="corner-accent bottom-right"></div>
+
+  <div class="page-inner">
+    <div class="cover-crown">&#x1F451;</div>
+    <div class="cover-brand">Monarch Detailing</div>
+    <div class="cover-tagline">Premium Mobile Car Care &mdash; Gold Coast &amp; Brisbane</div>
+    <div class="cover-divider"></div>
+    <div class="cover-menu-label">Official Service Menu</div>
+    <div class="cover-edition">March 2026 &nbsp;&bull;&nbsp; Version 2.1</div>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cover-bottom-links">monarchdetailing.com.au &nbsp;&nbsp;|&nbsp;&nbsp; @monarch.detailing</div>
+    <div class="cover-bottom-mobile">We Come to You &mdash; Fully Mobile with Our Own Power &amp; Water</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 2 — DETAILING PACKAGES
+     ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="corner-accent top-left"></div>
+  <div class="corner-accent top-right"></div>
+  <div class="corner-accent bottom-left"></div>
+  <div class="corner-accent bottom-right"></div>
+
+  <div class="page-inner">
+    <div class="section-header">
+      <h2>Detailing Packages</h2>
+      <div class="section-sub">Complete Care, Tailored to Your Vehicle</div>
+    </div>
+
+    <!-- SIGNATURE DETAIL -->
+    <div class="package featured">
+      <div class="package-badge">Most Popular</div>
+      <div class="package-name">Signature Detail</div>
+      <div class="package-subtitle">The Gold Standard &mdash; your complete inside-out transformation.</div>
+      <div class="package-pricing">
+        <div class="price-item">
+          <span class="price-label">Sedan / Hatch / Coupe</span>
+          <span class="price-value">$199</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label">SUV / Wagon / Ute</span>
+          <span class="price-value">$219</span>
+        </div>
+      </div>
+      <div class="package-details">
+        <div class="detail-column">
+          <h4>Exterior</h4>
+          <ul>
+            <li>Premium foam cannon wash</li>
+            <li>Hand wash with mitt</li>
+            <li>Wheels deep cleaned &amp; tyres dressed</li>
+            <li>Hand dry with microfibre</li>
+            <li>Exterior glass cleaned</li>
+            <li>Door jambs wiped</li>
+            <li>Spray sealant protection</li>
+          </ul>
+        </div>
+        <div class="detail-column">
+          <h4>Interior</h4>
+          <ul>
+            <li>Air blow-out (vents, crevices)</li>
+            <li>Full vacuum (seats, carpets, mats, boot)</li>
+            <li>Dashboard &amp; console wipe-down</li>
+            <li>Door panels wiped</li>
+            <li>Interior glass cleaned</li>
+            <li>Air freshening treatment</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXECUTIVE DETAIL -->
+    <div class="package">
+      <div class="package-name">Executive Detail</div>
+      <div class="package-subtitle">The Complete Reset &mdash; deep restoration, new-car feeling.</div>
+      <div class="package-pricing">
+        <div class="price-item">
+          <span class="price-label">Sedan</span>
+          <span class="price-value">$499</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label">SUV</span>
+          <span class="price-value">$549</span>
+        </div>
+      </div>
+      <div class="upgrade-block">
+        <div class="upgrade-label">Everything in Signature, plus</div>
+        <ul class="upgrade-list">
+          <li>Clay bar paint decontamination</li>
+          <li>Enhanced sealant &amp; exhaust tips polished</li>
+          <li>Exterior trim dressed &amp; protected</li>
+          <li>Floor mats, carpets &amp; fabric seats shampooed &amp; extracted</li>
+          <li>Leather conditioning (if applicable)</li>
+          <li>All vents &amp; buttons detailed</li>
+          <li>Full odour elimination &amp; boot detailed</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EXECUTIVE + GLOSS -->
+    <div class="package">
+      <div class="package-name">Executive + Gloss <span class="new-tag">New</span></div>
+      <div class="package-subtitle">The Best of Both &mdash; deep detail with paint transformation.</div>
+      <div class="package-pricing">
+        <div class="price-item">
+          <span class="price-label">Sedan</span>
+          <span class="price-value">$649</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label">SUV</span>
+          <span class="price-value">$749</span>
+        </div>
+      </div>
+      <div class="upgrade-block">
+        <div class="upgrade-label">Everything in Executive, plus</div>
+        <ul class="upgrade-list">
+          <li>1-stage paint enhancement polish (machine)</li>
+          <li>Enhanced sealant application</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PRE-SALE PREP -->
+    <div class="package">
+      <div class="package-name">Pre-Sale Prep</div>
+      <div class="package-subtitle">Showroom Ready &mdash; maximise your sale price. First impressions sell cars.</div>
+      <div class="package-pricing">
+        <div class="price-item">
+          <span class="price-label">Sedan</span>
+          <span class="price-value">$699</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label">SUV</span>
+          <span class="price-value">$799</span>
+        </div>
+      </div>
+      <div class="upgrade-block">
+        <div class="upgrade-label">Everything in Executive, plus</div>
+        <ul class="upgrade-list">
+          <li>Engine bay detail &amp; dressing</li>
+          <li>Paint enhancement polish (1-stage machine)</li>
+          <li>Photo-ready finish</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="footer-links">monarchdetailing.com.au &nbsp;&nbsp;|&nbsp;&nbsp; @monarch.detailing &nbsp;&nbsp;|&nbsp;&nbsp; Gold Coast &amp; Brisbane</div>
+      <div class="footer-tagline">We Come to You &mdash; Fully Mobile with Our Own Power &amp; Water</div>
+    </div>
+    <div class="page-number">02</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 3 — PAINT CORRECTION
+     ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="corner-accent top-left"></div>
+  <div class="corner-accent top-right"></div>
+  <div class="corner-accent bottom-left"></div>
+  <div class="corner-accent bottom-right"></div>
+
+  <div class="page-inner">
+    <div class="section-header">
+      <h2>Paint Correction</h2>
+      <div class="section-sub">Cut &amp; Polish &mdash; Restore Your Vehicle's True Finish</div>
+    </div>
+
+    <!-- 1-STAGE -->
+    <div class="paint-package">
+      <div class="paint-package-header">
+        <div>
+          <div class="paint-package-name">Paint Enhancement</div>
+          <div class="paint-package-sub">1-Stage &mdash; Quick Gloss Boost</div>
+        </div>
+        <div class="paint-defect">
+          <div class="defect-pct">60&ndash;70%</div>
+          <div class="defect-label">Defect Removal</div>
+        </div>
+      </div>
+      <div class="paint-pricing">
+        <div class="price-item">
+          <span class="price-label">Sedan</span>
+          <span class="price-value">$549</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label">SUV</span>
+          <span class="price-value">$649</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label" style="color: var(--grey-dark);">&nbsp;</span>
+          <span class="price-duration">4&ndash;5 hours</span>
+        </div>
+      </div>
+      <div class="paint-includes">
+        <span>Includes:</span> Wash, clay bar, 1-stage machine polish, sealant
+      </div>
+    </div>
+
+    <!-- 2-STAGE -->
+    <div class="paint-package">
+      <div class="paint-package-header">
+        <div>
+          <div class="paint-package-name">Paint Correction</div>
+          <div class="paint-package-sub">2-Stage &mdash; Full Restoration</div>
+        </div>
+        <div class="paint-defect">
+          <div class="defect-pct">80&ndash;90%</div>
+          <div class="defect-label">Defect Removal</div>
+        </div>
+      </div>
+      <div class="paint-pricing">
+        <div class="price-item">
+          <span class="price-label">Sedan</span>
+          <span class="price-value">$749</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label">SUV</span>
+          <span class="price-value">$849</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label" style="color: var(--grey-dark);">&nbsp;</span>
+          <span class="price-duration">6&ndash;8 hours</span>
+        </div>
+      </div>
+      <div class="paint-includes">
+        <span>Includes:</span> Wash, clay bar, 2-stage machine polish, sealant
+      </div>
+    </div>
+
+    <!-- 3-STAGE -->
+    <div class="paint-package">
+      <div class="paint-package-header">
+        <div>
+          <div class="paint-package-name">Show Prep</div>
+          <div class="paint-package-sub">3-Stage &mdash; Mirror Finish</div>
+        </div>
+        <div class="paint-defect">
+          <div class="defect-pct">95%+</div>
+          <div class="defect-label">Defect Removal</div>
+        </div>
+      </div>
+      <div class="paint-pricing">
+        <div class="price-item">
+          <span class="price-label" style="font-size: 10px; color: var(--white-soft);">Quote Only</span>
+        </div>
+      </div>
+      <div class="paint-includes">
+        <span>Contact for vehicle inspection &mdash;</span> every finish is unique, pricing based on condition &amp; size.
+      </div>
+    </div>
+
+    <div class="divider" style="margin: 28px 0;"></div>
+
+    <!-- CERAMIC COATING -->
+    <div class="ceramic-block">
+      <h3>Ceramic Coating</h3>
+      <div class="ceramic-price">From $1,500 <span>&nbsp;&bull;&nbsp; Quoted After Inspection</span></div>
+      <div class="ceramic-features">
+        <span class="ceramic-feature">Full 2-stage paint correction</span>
+        <span class="ceramic-feature">Professional-grade ceramic</span>
+        <span class="ceramic-feature">3 / 5 / 7-year protection</span>
+        <span class="ceramic-feature">Aftercare kit included</span>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="footer-links">monarchdetailing.com.au &nbsp;&nbsp;|&nbsp;&nbsp; @monarch.detailing &nbsp;&nbsp;|&nbsp;&nbsp; Gold Coast &amp; Brisbane</div>
+      <div class="footer-tagline">We Come to You &mdash; Fully Mobile with Our Own Power &amp; Water</div>
+    </div>
+    <div class="page-number">03</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 4 — ADD-ON SERVICES
+     ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="corner-accent top-left"></div>
+  <div class="corner-accent top-right"></div>
+  <div class="corner-accent bottom-left"></div>
+  <div class="corner-accent bottom-right"></div>
+
+  <div class="page-inner">
+    <div class="section-header">
+      <h2>Add-On Services</h2>
+      <div class="section-sub">Enhance Any Package with Targeted Treatments</div>
+    </div>
+
+    <div class="addons-grid">
+      <!-- INTERIOR ADD-ONS -->
+      <div class="addon-section">
+        <h3>Interior</h3>
+        <div class="addon-sub">Targeted Interior Treatments</div>
+
+        <div class="addon-item">
+          <span class="addon-name">Pet Hair Removal</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$50</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Child Seat Area Detail</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$40</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Headliner Clean</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$60</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Steam Sanitisation</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$60</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Leather Deep Treatment</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$75</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Fabric Protection Coating</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$80</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Heavy Odour Treatment (Ozone)</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$80</span>
+        </div>
+      </div>
+
+      <!-- EXTERIOR ADD-ONS -->
+      <div class="addon-section">
+        <h3>Exterior</h3>
+        <div class="addon-sub">Targeted Exterior Treatments</div>
+
+        <div class="addon-item">
+          <span class="addon-name">Tar &amp; Sap Removal</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$40</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Trim Restoration</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$60</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Engine Bay Detail</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$80</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Headlight Restoration</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$80 / pair</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Clay Bar Decontamination</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$80</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Glass Coating</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$120</span>
+        </div>
+        <div class="addon-item">
+          <span class="addon-name">Wheel Ceramic Coating</span>
+          <span class="addon-dots"></span>
+          <span class="addon-price">$200</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer" style="margin-top: auto;">
+      <div class="footer-links">monarchdetailing.com.au &nbsp;&nbsp;|&nbsp;&nbsp; @monarch.detailing &nbsp;&nbsp;|&nbsp;&nbsp; Gold Coast &amp; Brisbane</div>
+      <div class="footer-tagline">We Come to You &mdash; Fully Mobile with Our Own Power &amp; Water</div>
+    </div>
+    <div class="page-number">04</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 5 — QUICK REFERENCE & COMPARISON
+     ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="corner-accent top-left"></div>
+  <div class="corner-accent top-right"></div>
+  <div class="corner-accent bottom-left"></div>
+  <div class="corner-accent bottom-right"></div>
+
+  <div class="page-inner">
+    <div class="section-header">
+      <h2>Quick Reference</h2>
+      <div class="section-sub">At-a-Glance Pricing &amp; Package Comparison</div>
+    </div>
+
+    <!-- PRICING TABLE -->
+    <div class="reference-section">
+      <h3>Pricing Overview</h3>
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th style="width: 36%;">Package</th>
+            <th>Sedan / Hatch / Coupe</th>
+            <th>SUV / Wagon / Ute</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="package-header-cell">Signature Detail</td>
+            <td class="price-cell">$199</td>
+            <td class="price-cell">$219</td>
+          </tr>
+          <tr>
+            <td class="package-header-cell">Executive Detail</td>
+            <td class="price-cell">$499</td>
+            <td class="price-cell">$549</td>
+          </tr>
+          <tr>
+            <td class="package-header-cell">Executive + Gloss</td>
+            <td class="price-cell">$649</td>
+            <td class="price-cell">$749</td>
+          </tr>
+          <tr>
+            <td class="package-header-cell">Pre-Sale Prep</td>
+            <td class="price-cell">$699</td>
+            <td class="price-cell">$799</td>
+          </tr>
+          <tr style="border-top: 1px solid rgba(212,175,55,0.15);">
+            <td class="package-header-cell">Paint Enhancement (1-Stage)</td>
+            <td class="price-cell">$549</td>
+            <td class="price-cell">$649</td>
+          </tr>
+          <tr>
+            <td class="package-header-cell">Paint Correction (2-Stage)</td>
+            <td class="price-cell">$749</td>
+            <td class="price-cell">$849</td>
+          </tr>
+          <tr>
+            <td class="package-header-cell">Show Prep (3-Stage)</td>
+            <td class="price-cell" colspan="2" style="color: var(--grey-light); font-family: 'Inter', sans-serif; font-size: 9px;">Quote Only</td>
+          </tr>
+          <tr>
+            <td class="package-header-cell">Ceramic Coating</td>
+            <td class="price-cell" colspan="2" style="font-size: 10px;">From $1,500</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="reference-section">
+      <h3>What's Included</h3>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 34%;">Feature</th>
+            <th>Signature</th>
+            <th>Executive</th>
+            <th>Exec + Gloss</th>
+            <th>Pre-Sale</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Foam cannon &amp; hand wash</td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Wheels, tyres &amp; door jambs</td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Full vacuum &amp; interior wipe-down</td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Spray sealant protection</td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Interior &amp; exterior glass</td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Air freshening treatment</td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Clay bar decontamination</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Enhanced sealant</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Carpet &amp; seat shampoo / extraction</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Leather conditioning</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Odour elimination</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Exhaust tips &amp; trim dressed</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Boot detailed</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>1-stage paint enhancement polish</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Engine bay detail</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Photo-ready finish</td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="dash">&mdash;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="page-footer">
+      <div class="footer-links">monarchdetailing.com.au &nbsp;&nbsp;|&nbsp;&nbsp; @monarch.detailing &nbsp;&nbsp;|&nbsp;&nbsp; Gold Coast &amp; Brisbane</div>
+      <div class="footer-tagline">We Come to You &mdash; Fully Mobile with Our Own Power &amp; Water</div>
+    </div>
+    <div class="page-number">05</div>
+  </div>
+</div>
+
+</body>
+</html>

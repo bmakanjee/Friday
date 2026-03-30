@@ -1,0 +1,50 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '## FRIDAY Context Loaded' && echo '---' && echo '### Hot Memory' && cat memory/hot-memory.md 2>/dev/null | head -60 && echo '---' && echo '### Recent Corrections' && cat memory/patterns/corrections.md 2>/dev/null | tail -20 && echo '---' && echo '### Boundaries' && cat memory/patterns/boundaries.md 2>/dev/null | grep -A2 'must escalate' && echo '---' && echo '### Inbox' && wc -l inbox/braindump.md 2>/dev/null | awk '{if($1>5) print $1-5\" unprocessed items in inbox\"; else print \"Inbox empty\"}' && echo '---' && echo '### Git Status' && git status --short 2>/dev/null | head -5",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$(date -Iseconds) | Session ended\" >> .claude/logs/sessions.log 2>/dev/null; mkdir -p .claude/logs 2>/dev/null; exit 0",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before ending: Did you learn anything new this session that should be saved? If yes, identify which memory file to update (corrections, preferences, strategies, hot-memory, ads-history, business-knowledge, or entities). State the file and the update in one sentence. If nothing new was learned, say 'No memory updates needed.'",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Edit",
+      "Write",
+      "Read",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Agent"
+    ]
+  }
+}

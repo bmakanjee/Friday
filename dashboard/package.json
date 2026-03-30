@@ -1,0 +1,12 @@
+{
+  "name": "friday-mission-control",
+  "version": "0.1.0",
+  "description": "FRIDAY Mission Control — business ops + agent monitoring dashboard",
+  "scripts": {
+    "start": "bun run server.ts",
+    "dev": "bun --watch run server.ts"
+  },
+  "dependencies": {
+    "hono": "^4.7.0"
+  }
+}

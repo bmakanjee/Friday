@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRIDAY Mission Control v2</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    /* ========== RESET & BASE ========== */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --bg-body: #111114;
+      --bg-sidebar: #18181c;
+      --bg-card: #1c1c22;
+      --bg-card-hover: #24242c;
+      --bg-kanban-col: #16161b;
+      --gold: #D4AF37;
+      --gold-bright: #e5c466;
+      --gold-dim: rgba(212,175,55,0.12);
+      --gold-glow: 0 0 20px rgba(212,175,55,0.15);
+      --text: #eeeef0;
+      --text-sec: #9d9da5;
+      --text-muted: #5c5c66;
+      --green: #22c55e;
+      --green-dim: rgba(34,197,94,0.12);
+      --red: #ef4444;
+      --red-dim: rgba(239,68,68,0.12);
+      --yellow: #eab308;
+      --yellow-dim: rgba(234,179,8,0.12);
+      --orange: #f59e0b;
+      --orange-dim: rgba(245,158,11,0.12);
+      --grey: #6b7280;
+      --grey-dim: rgba(107,114,128,0.1);
+      --blue: #3b82f6;
+      --blue-dim: rgba(59,130,246,0.12);
+      --border: #2a2a32;
+      --border-light: #3a3a44;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --sidebar-w: 72px;
+      --header-h: 56px;
+      --transition: 0.2s ease;
+      --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: var(--bg-body);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+    /* ========== SIDEBAR ========== */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: linear-gradient(180deg, #1a1a20, #141418);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 200;
+    }
+
+    .sidebar-logo {
+      font-size: 24px;
+      margin-bottom: 4px;
+      cursor: default;
+      user-select: none;
+      filter: drop-shadow(0 0 6px rgba(212,175,55,0.3));
+    }
+
+    .sidebar-divider {
+      width: 36px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+      margin: 6px 0 10px;
+    }
+
+    .sidebar-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+
+    .nav-btn {
+      width: 56px;
+      height: 52px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    .nav-btn .nav-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      transition: all var(--transition);
+    }
+
+    .nav-btn:hover { background: rgba(255,255,255,0.04); color: var(--text-sec); }
+    .nav-btn:hover .nav-label { opacity: 1; }
+    .nav-btn.active { background: var(--gold-dim); color: var(--gold); }
+    .nav-btn.active .nav-label { opacity: 1; color: var(--gold); }
+    .nav-btn.active::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 28px;
+      background: var(--gold);
+      border-radius: 0 2px 2px 0;
+      box-shadow: 0 0 8px rgba(212,175,55,0.4);
+    }
+
+    .nav-btn svg { width: 20px; height: 20px; }
+
+    .sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .conn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      transition: background var(--transition);
+    }
+    .conn-dot.live { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .conn-dot.offline { background: var(--red); box-shadow: 0 0 8px var(--red); }
+
+    .sidebar-time {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.2;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      max-height: 70px;
+      overflow: hidden;
+    }
+
+    .sidebar-gear {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sidebar-gear:hover { color: var(--text-sec); background: rgba(255,255,255,0.03); }
+
+    /* ========== MAIN LAYOUT ========== */
+    .main-wrap {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ========== HEADER ========== */
+    .header {
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(28,28,34,0.98), rgba(17,17,20,0.95));
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-crown { font-size: 22px; filter: drop-shadow(0 0 6px rgba(212,175,55,0.3)); }
+    .header-title { font-size: 16px; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; text-shadow: 0 0 20px rgba(212,175,55,0.2); }
+    .header-sub { font-size: 11px; color: var(--text-sec); margin-top: 1px; }
+
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .header-clock { font-size: 13px; color: var(--text-sec); font-variant-numeric: tabular-nums; }
+    .header-conn {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: var(--text-muted);
+    }
+    .header-conn .conn-dot { width: 7px; height: 7px; }
+
+    /* ========== CONTENT ========== */
+    .content { flex: 1; padding: 24px 28px; overflow-y: auto; }
+
+    .tab-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity var(--transition-slow), transform var(--transition-slow);
+    }
+    .tab-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: fadeSlideIn 0.35s ease forwards;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== GRID LAYOUTS ========== */
+    .split-60-40 { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    @media (min-width: 1024px) { .split-60-40 { grid-template-columns: 3fr 2fr; } }
+
+    .split-60-40-r { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    @media (min-width: 1024px) { .split-60-40-r { grid-template-columns: 3fr 2fr; } }
+
+    .stack { display: flex; flex-direction: column; gap: 24px; }
+
+    /* ========== SECTION HEADER ========== */
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid transparent;
+      border-image: linear-gradient(90deg, var(--gold), transparent) 1;
+    }
+
+    /* ========== CARDS ========== */
+    .card {
+      background: linear-gradient(145deg, var(--bg-card), #191920);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+    }
+    .card:hover { border-color: var(--border-light); box-shadow: 0 4px 24px rgba(0,0,0,0.2); }
+
+    .card-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      position: relative;
+    }
+
+    .card-badge {
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .badge-green { background: var(--green-dim); color: var(--green); }
+    .badge-red { background: var(--red-dim); color: var(--red); }
+    .badge-yellow { background: var(--yellow-dim); color: var(--yellow); }
+    .badge-grey { background: var(--grey-dim); color: var(--grey); }
+    .badge-orange { background: var(--orange-dim); color: var(--orange); }
+    .badge-blue { background: var(--blue-dim); color: var(--blue); }
+
+    /* ========== KANBAN ========== */
+    .kanban { display: grid; gap: 12px; }
+    .kanban-3 { grid-template-columns: repeat(3, 1fr); }
+    .kanban-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 768px) {
+      .kanban-3, .kanban-4 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .kanban-3, .kanban-4 { grid-template-columns: 1fr; }
+    }
+
+    .kanban-col {
+      background: var(--bg-kanban-col);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      min-height: 100px;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .kanban-col-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-sec);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kanban-col-count {
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 1px 7px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .k-card {
+      background: linear-gradient(135deg, var(--bg-card), #1e1e26);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      border-left: 3px solid var(--border);
+      transition: all var(--transition);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .k-card:hover {
+      border-color: var(--border-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+    .k-card:last-child { margin-bottom: 0; }
+
+    .k-card-title { font-weight: 600; color: var(--text); margin-bottom: 5px; line-height: 1.3; }
+    .k-card-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+
+    .priority-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .priority-p0 { background: var(--red-dim); color: var(--red); }
+    .priority-p1 { background: var(--yellow-dim); color: var(--yellow); }
+    .priority-p2 { background: var(--grey-dim); color: var(--grey); }
+
+    /* Border-left colours for kanban priorities */
+    .k-card.bl-red { border-left-color: var(--red); }
+    .k-card.bl-yellow { border-left-color: var(--yellow); }
+    .k-card.bl-grey { border-left-color: var(--grey); }
+    .k-card.bl-green { border-left-color: var(--green); }
+    .k-card.bl-gold { border-left-color: var(--gold); }
+    .k-card.bl-orange { border-left-color: var(--orange); }
+
+    /* ========== KPI CARDS ========== */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+
+    .kpi-card {
+      background: linear-gradient(145deg, #1e1e28, #18181f);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      text-align: center;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      border-color: var(--border-light);
+    }
+    .kpi-label { font-size: 10px; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .kpi-value { font-size: 28px; font-weight: 700; color: var(--text); }
+    .kpi-value.gold { color: var(--gold); text-shadow: 0 0 20px rgba(212,175,55,0.25); }
+    .kpi-change { font-size: 11px; font-weight: 600; margin-top: 6px; }
+    .kpi-change.up { color: var(--green); }
+    .kpi-change.down { color: var(--red); }
+    .kpi-change.neutral { color: var(--text-muted); }
+
+    /* ========== TABLE ========== */
+    .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .tbl th {
+      text-align: left; padding: 10px 12px; font-size: 10px; font-weight: 700;
+      color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tbl td { padding: 12px; border-bottom: 1px solid var(--border); transition: background var(--transition); }
+    .tbl tr:hover td { background: rgba(255,255,255,0.02); }
+    .tbl tr:last-child td { border-bottom: none; }
+    .tbl .name-col { font-weight: 600; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ========== ALERTS ========== */
+    .alert-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px; border-radius: var(--radius-sm);
+      margin-bottom: 8px; font-size: 13px;
+      transition: all var(--transition);
+    }
+    .alert-item:hover { transform: translateX(2px); }
+    .alert-item.critical { background: var(--red-dim); border-left: 3px solid var(--red); }
+    .alert-item.warning { background: var(--yellow-dim); border-left: 3px solid var(--yellow); }
+    .alert-item.info { background: var(--blue-dim); border-left: 3px solid var(--blue); }
+    .alert-dismiss {
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 14px; margin-left: auto; padding: 0 4px;
+    }
+
+    /* ========== INBOX FEED ========== */
+    .inbox-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      transition: all var(--transition);
+    }
+    .inbox-item:hover { padding-left: 4px; }
+    .inbox-item:last-child { border-bottom: none; }
+    .inbox-sender { font-weight: 600; color: var(--gold); font-size: 11px; }
+    .inbox-time { font-size: 10px; color: var(--text-muted); }
+    .inbox-text { margin-top: 4px; color: var(--text); line-height: 1.4; }
+
+    /* ========== PENDING APPROVAL ========== */
+    .approval-card {
+      background: linear-gradient(135deg, rgba(245,158,11,0.06), transparent);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      transition: all var(--transition);
+      position: relative;
+    }
+    .approval-card:hover {
+      border-color: var(--orange);
+      box-shadow: 0 0 16px rgba(245,158,11,0.1);
+      transform: translateX(2px);
+    }
+    .approval-card:last-child { margin-bottom: 0; }
+    .approval-type {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--orange);
+      margin-bottom: 5px;
+    }
+    .approval-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .approval-desc { font-size: 12px; color: var(--text-sec); line-height: 1.4; }
+    .approval-meta { font-size: 10px; color: var(--text-muted); margin-top: 6px; display: flex; gap: 12px; align-items: center; }
+    .approval-actions { display: flex; gap: 6px; margin-top: 10px; }
+    .approval-btn {
+      padding: 5px 14px; border-radius: 5px; font-size: 11px; font-weight: 600;
+      border: none; cursor: pointer; transition: all var(--transition);
+    }
+    .approval-btn.approve { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+    .approval-btn.approve:hover { background: rgba(34,197,94,0.25); border-color: var(--green); }
+    .approval-btn.reject { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+    .approval-btn.reject:hover { background: rgba(239,68,68,0.25); border-color: var(--red); }
+    .approval-btn.defer { background: var(--grey-dim); color: var(--grey); border: 1px solid rgba(107,114,128,0.3); }
+    .approval-btn.defer:hover { background: rgba(107,114,128,0.25); border-color: var(--grey); }
+
+    /* ========== FOR REVIEW / UNREAD ========== */
+    .review-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px; border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, rgba(59,130,246,0.06), transparent);
+      border: 1px solid rgba(59,130,246,0.15);
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .review-item:hover {
+      border-color: rgba(59,130,246,0.35);
+      box-shadow: 0 0 12px rgba(59,130,246,0.08);
+      transform: translateX(2px);
+    }
+    .review-item:last-child { margin-bottom: 0; }
+    .review-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .review-content { flex: 1; }
+    .review-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .review-meta { font-size: 10px; color: var(--text-muted); display: flex; gap: 10px; align-items: center; }
+    .review-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; box-shadow: 0 0 6px rgba(59,130,246,0.4); }
+
+    /* ========== PRIORITIES LIST ========== */
+    .priority-list { list-style: none; counter-reset: pri; }
+    .priority-list li {
+      counter-increment: pri;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all var(--transition);
+    }
+    .priority-list li:hover { padding-left: 4px; }
+    .priority-list li:last-child { border-bottom: none; }
+    .priority-list li::before {
+      content: counter(pri);
+      display: flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--gold-dim); color: var(--gold);
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+      box-shadow: 0 0 8px rgba(212,175,55,0.1);
+    }
+
+    /* ========== OPEN LOOPS ========== */
+    .loop-item {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+    }
+    .loop-item:last-child { border-bottom: none; }
+    .loop-icon { color: var(--text-muted); flex-shrink: 0; font-size: 12px; margin-top: 2px; }
+
+    /* ========== QUICK ACTIONS ========== */
+    .quick-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .qa-btn {
+      flex: 1; min-width: 100px; padding: 11px 14px;
+      background: linear-gradient(135deg, var(--gold-dim), rgba(212,175,55,0.06));
+      border: 1px solid rgba(212,175,55,0.25);
+      border-radius: var(--radius-sm); color: var(--gold);
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: all var(--transition); text-align: center;
+    }
+    .qa-btn:hover {
+      background: rgba(212,175,55,0.2);
+      border-color: var(--gold);
+      box-shadow: var(--gold-glow);
+      transform: translateY(-1px);
+    }
+
+    /* ========== CHART ========== */
+    .chart-wrap { position: relative; height: 220px; margin-top: 10px; }
+
+    /* ========== VENTURE CARDS ========== */
+    .venture-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+
+    .venture-card {
+      background: linear-gradient(145deg, var(--bg-card), #191920);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .venture-card:hover {
+      border-color: var(--border-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .venture-card.v-active { border-left-color: var(--green); }
+    .venture-card.v-setup { border-left-color: var(--yellow); }
+    .venture-card.v-research { border-left-color: var(--blue); }
+    .venture-card.v-future { border-left-color: var(--grey); }
+
+    .venture-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .venture-status { font-size: 11px; margin-bottom: 10px; }
+    .venture-details {
+      font-size: 12px; color: var(--text-sec); line-height: 1.6;
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+    }
+    .venture-card.expanded .venture-details { max-height: 300px; }
+    .venture-expand { font-size: 10px; color: var(--text-muted); margin-top: 8px; }
+
+    /* ========== AGENT CARDS ========== */
+    .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
+
+    .agent-card {
+      background: linear-gradient(145deg, var(--bg-card), #191920);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .agent-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      border-color: var(--border-light);
+    }
+    .agent-icon { font-size: 28px; margin-bottom: 8px; }
+    .agent-name { font-size: 13px; font-weight: 700; color: var(--gold); margin-bottom: 2px; text-shadow: 0 0 12px rgba(212,175,55,0.15); }
+    .agent-role { font-size: 11px; color: var(--text-sec); margin-bottom: 8px; }
+    .agent-status { font-size: 11px; }
+    .agent-task { font-size: 11px; color: var(--text-muted); margin-top: 6px; font-style: italic; }
+
+    /* ========== BUILD LOG ========== */
+    .build-log { max-height: 300px; overflow-y: auto; }
+    .log-item {
+      display: flex; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid var(--border); font-size: 12px;
+    }
+    .log-item:last-child { border-bottom: none; }
+    .log-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; background: var(--gold); box-shadow: 0 0 6px rgba(212,175,55,0.3); }
+    .log-time { color: var(--text-muted); font-size: 10px; white-space: nowrap; }
+    .log-msg { color: var(--text-sec); }
+
+    /* ========== SCHEDULE TABLE ========== */
+    .sched-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+    }
+    .sched-item:last-child { border-bottom: none; }
+    .sched-name { font-weight: 600; }
+    .sched-time { color: var(--text-sec); font-size: 12px; }
+
+    /* ========== LEAD PIPELINE CARDS ========== */
+    .lead-card {
+      background: linear-gradient(135deg, var(--bg-card), #1e1e26);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      transition: all var(--transition);
+    }
+    .lead-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .lead-card:last-child { margin-bottom: 0; }
+    .lead-card.stale { border-color: rgba(239,68,68,0.3); }
+    .lead-name { font-weight: 600; margin-bottom: 3px; }
+    .lead-phone { color: var(--gold); text-decoration: none; font-size: 11px; }
+    .lead-age { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ========== EMPTY STATE ========== */
+    .empty { text-align: center; padding: 24px; color: var(--text-muted); font-size: 12px; }
+
+    /* ========== SCROLLABLE ========== */
+    .scroll-y { max-height: 400px; overflow-y: auto; }
+    .scroll-y-sm { max-height: 250px; overflow-y: auto; }
+
+    /* ========== RECONNECTING BANNER ========== */
+    .reconnecting-banner {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+      color: var(--red); padding: 8px 20px; border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; z-index: 300;
+      backdrop-filter: blur(12px);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* ========== QUICK STATS BAR ========== */
+    .quick-stats-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 24px;
+      background: linear-gradient(180deg, rgba(20,20,24,0.95), rgba(17,17,20,0.9));
+      border-bottom: 1px solid var(--border);
+      gap: 8px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .qs-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      min-width: 100px;
+      flex: 1;
+    }
+    .qs-label {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    .qs-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+      text-shadow: 0 0 12px rgba(212,175,55,0.2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ========== NOTIFICATION BADGE ========== */
+    .nav-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      background: var(--red);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      box-shadow: 0 0 8px rgba(239,68,68,0.4);
+      line-height: 1;
+    }
+    .nav-badge.gold-badge {
+      background: var(--gold);
+      color: #111;
+      box-shadow: 0 0 8px rgba(212,175,55,0.4);
+    }
+
+    /* ========== WEATHER WIDGET ========== */
+    .weather-card {
+      background: linear-gradient(145deg, var(--bg-card), #191920);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .weather-card:hover { border-color: var(--border-light); box-shadow: 0 4px 24px rgba(0,0,0,0.2); }
+    .weather-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .weather-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .weather-loc {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+    .weather-body {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .weather-temp {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    .weather-temp span { font-size: 16px; color: var(--text-sec); vertical-align: super; }
+    .weather-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--text-sec);
+    }
+    .weather-rain-warn {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--red-dim);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .weather-icon { font-size: 28px; }
+
+    /* ========== REVENUE TRACKER ========== */
+    .revenue-progress-wrap {
+      margin-top: 12px;
+    }
+    .revenue-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    .revenue-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+      border-radius: 6px;
+      transition: width 1s ease;
+      box-shadow: 0 0 12px rgba(212,175,55,0.3);
+    }
+    .revenue-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-sec);
+    }
+    .revenue-big {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(212,175,55,0.25);
+    }
+    .revenue-target { color: var(--text-muted); font-size: 13px; }
+
+    /* ========== DAILY SCHEDULE ========== */
+    .schedule-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+      gap: 8px;
+    }
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 70px 1fr 120px 80px;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      align-items: center;
+    }
+    .schedule-row:last-child { border-bottom: none; }
+    .schedule-time { color: var(--gold); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .schedule-job { font-weight: 600; color: var(--text); }
+    .schedule-client { color: var(--text-sec); }
+    .schedule-status { text-align: right; }
+
+    /* ========== FOOTER BAR ========== */
+    .footer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 8px 24px;
+      background: linear-gradient(180deg, rgba(20,20,24,0.9), rgba(14,14,17,0.95));
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+    .footer-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .footer-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .footer-dot.ok { background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .footer-dot.err { background: var(--red); box-shadow: 0 0 6px var(--red); }
+    .footer-sep { color: var(--border); }
+  </style>
+</head>
+<body x-data="missionControl()" x-init="init()">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo" title="FRIDAY">&#128081;</div>
+    <div class="sidebar-divider"></div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-btn" :class="tab === 'ops' && 'active'" @click="switchTab('ops')" title="Operations">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span class="nav-label">Ops</span>
+        <span class="nav-badge" x-show="pendingApprovals.length > 0" x-text="pendingApprovals.length"></span>
+      </button>
+      <button class="nav-btn" :class="tab === 'monarch' && 'active'" @click="switchTab('monarch'); $nextTick(() => renderTrendChart())" title="Monarch Detailing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <span class="nav-label">Monarch</span>
+        <span class="nav-badge gold-badge" x-show="monarchBadgeCount > 0" x-text="monarchBadgeCount"></span>
+      </button>
+      <button class="nav-btn" :class="tab === 'ventures' && 'active'" @click="switchTab('ventures')" title="Ventures">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span class="nav-label">Ventures</span>
+      </button>
+      <button class="nav-btn" :class="tab === 'agents' && 'active'" @click="switchTab('agents')" title="Agents">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4v2a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4z"/><path d="M16 14H8a4 4 0 0 0-4 4v2h16v-2a4 4 0 0 0-4-4z"/></svg>
+        <span class="nav-label">Agents</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="conn-dot" :class="connected ? 'live' : 'offline'" :title="connected ? 'Connected' : 'Disconnected'"></div>
+      <div class="sidebar-time" x-text="lastUpdated"></div>
+      <button class="sidebar-gear" title="Settings">&#9881;</button>
+    </div>
+  </aside>
+
+  <!-- ===== RECONNECTING BANNER ===== -->
+  <div class="reconnecting-banner" x-show="!connected && wsReconnecting" x-transition>
+    Reconnecting to FRIDAY...
+  </div>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main-wrap">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <span class="header-crown">&#128081;</span>
+        <div>
+          <div class="header-title">FRIDAY Mission Control</div>
+          <div class="header-sub">Braj &amp; FRIDAY &mdash; Operations Hub</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-conn">
+          <div class="conn-dot" :class="connected ? 'live' : 'offline'"></div>
+          <span x-text="connected ? 'Live' : 'Offline'"></span>
+        </div>
+        <div class="header-clock" x-text="clock"></div>
+      </div>
+    </header>
+
+    <!-- QUICK STATS BAR -->
+    <div class="quick-stats-bar">
+      <div class="qs-item">
+        <span class="qs-label">Spend Today</span>
+        <span class="qs-value" x-text="'$' + fmt(quickStats.spendToday)"></span>
+      </div>
+      <div class="qs-item">
+        <span class="qs-label">Leads Today</span>
+        <span class="qs-value" x-text="quickStats.leadsToday"></span>
+      </div>
+      <div class="qs-item">
+        <span class="qs-label">Jobs This Week</span>
+        <span class="qs-value" x-text="quickStats.jobsThisWeek"></span>
+      </div>
+      <div class="qs-item">
+        <span class="qs-label">Revenue MTD</span>
+        <span class="qs-value" x-text="'$' + fmtNum(quickStats.revenueMtd)"></span>
+      </div>
+      <div class="qs-item">
+        <span class="qs-label">Uninvoiced</span>
+        <span class="qs-value" x-text="quickStats.uninvoiced" :style="quickStats.uninvoiced > 0 ? 'color: var(--orange)' : ''"></span>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ==================== TAB 1: OPERATIONS ==================== -->
+      <div class="tab-panel" :class="tab === 'ops' && 'active'">
+        <div class="split-60-40">
+          <!-- LEFT COL -->
+          <div class="stack">
+            <!-- Task Board -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Task Board</span>
+                <span class="card-badge badge-grey" x-text="tasks.todo.length + tasks.doing.length + tasks.done.length + ' tasks'"></span>
+              </div>
+              <div class="kanban kanban-3">
+                <!-- TO DO -->
+                <div class="kanban-col">
+                  <div class="kanban-col-title">
+                    To Do <span class="kanban-col-count" x-text="tasks.todo.length"></span>
+                  </div>
+                  <div class="scroll-y">
+                    <template x-for="t in tasks.todo" :key="t.title">
+                      <div class="k-card" :class="'bl-' + prioColor(t.priority)">
+                        <div class="k-card-title" x-text="t.title"></div>
+                        <div class="k-card-meta">
+                          <span class="priority-badge" :class="'priority-' + t.priority.toLowerCase()" x-text="t.priority"></span>
+                          <span x-text="t.date"></span>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+                <!-- DOING -->
+                <div class="kanban-col">
+                  <div class="kanban-col-title">
+                    Doing <span class="kanban-col-count" x-text="tasks.doing.length"></span>
+                  </div>
+                  <div class="scroll-y">
+                    <template x-for="t in tasks.doing" :key="t.title">
+                      <div class="k-card bl-gold">
+                        <div class="k-card-title" x-text="t.title"></div>
+                        <div class="k-card-meta">
+                          <span class="priority-badge" :class="'priority-' + t.priority.toLowerCase()" x-text="t.priority"></span>
+                          <span x-text="t.date"></span>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+                <!-- DONE -->
+                <div class="kanban-col">
+                  <div class="kanban-col-title">
+                    Done <span class="kanban-col-count" x-text="tasks.done.length"></span>
+                  </div>
+                  <div class="scroll-y">
+                    <template x-for="t in tasks.done" :key="t.title">
+                      <div class="k-card bl-green">
+                        <div class="k-card-title" style="text-decoration:line-through;opacity:0.6" x-text="t.title"></div>
+                        <div class="k-card-meta">
+                          <span class="priority-badge priority-p2" x-text="t.priority"></span>
+                          <span x-text="t.date"></span>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Today's Priorities -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Today's Priorities</span>
+              </div>
+              <ol class="priority-list">
+                <template x-for="p in todayPriorities" :key="p">
+                  <li x-text="p"></li>
+                </template>
+              </ol>
+            </div>
+
+            <!-- Pending Approvals -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title" style="color: var(--orange);">Pending Approval</span>
+                <span class="card-badge badge-orange" x-text="pendingApprovals.length + ' awaiting'"></span>
+              </div>
+              <div class="scroll-y-sm">
+                <template x-for="(item, idx) in pendingApprovals" :key="idx">
+                  <div class="approval-card">
+                    <div class="approval-type" x-text="item.type"></div>
+                    <div class="approval-title" x-text="item.title"></div>
+                    <div class="approval-desc" x-text="item.description"></div>
+                    <div class="approval-meta">
+                      <span x-text="'Requested: ' + item.requested"></span>
+                      <span x-text="'Impact: ' + item.impact"></span>
+                    </div>
+                    <div class="approval-actions">
+                      <button class="approval-btn approve" @click.stop="approveItem(idx)">Approve</button>
+                      <button class="approval-btn defer" @click.stop="deferItem(idx)">Later</button>
+                      <button class="approval-btn reject" @click.stop="rejectItem(idx)">Reject</button>
+                    </div>
+                  </div>
+                </template>
+                <div class="empty" x-show="pendingApprovals.length === 0">Nothing pending - all clear</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COL -->
+          <div class="stack">
+            <!-- Weather Widget -->
+            <div class="weather-card">
+              <div class="weather-hdr">
+                <span class="weather-title">Weather</span>
+                <span class="weather-loc">Gold Coast, QLD</span>
+              </div>
+              <template x-if="weather.loaded">
+                <div>
+                  <div class="weather-body">
+                    <span class="weather-icon" x-text="weatherIcon(weather.condition)"></span>
+                    <div class="weather-temp" x-text="weather.temp"><span>&#176;C</span></div>
+                    <div class="weather-details">
+                      <span x-text="weather.condition"></span>
+                      <span>Humidity: <strong x-text="weather.humidity + '%'"></strong></span>
+                      <span>Rain: <strong x-text="weather.rainChance + '%'" :style="weather.rainChance > 50 ? 'color:var(--red)' : 'color:var(--green)'"></strong></span>
+                      <span>Wind: <strong x-text="weather.wind + ' km/h'"></strong></span>
+                    </div>
+                  </div>
+                  <div class="weather-rain-warn" x-show="weather.rainChance > 50">
+                    &#9888; Rain risk &mdash; confirm outdoor jobs
+                  </div>
+                </div>
+              </template>
+              <template x-if="!weather.loaded">
+                <div class="empty">Loading weather data...</div>
+              </template>
+            </div>
+
+            <!-- Daily Schedule -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Today's Schedule</span>
+                <span class="card-badge badge-grey" x-text="todaySchedule.length + ' jobs'"></span>
+              </div>
+              <template x-if="todaySchedule.length > 0">
+                <div>
+                  <template x-for="job in todaySchedule" :key="job.time">
+                    <div class="schedule-row">
+                      <span class="schedule-time" x-text="job.time"></span>
+                      <span class="schedule-job" x-text="job.title"></span>
+                      <span class="schedule-client" x-text="job.client"></span>
+                      <span class="schedule-status">
+                        <span class="card-badge" :class="'badge-' + job.badgeColor" x-text="job.status"></span>
+                      </span>
+                    </div>
+                  </template>
+                </div>
+              </template>
+              <template x-if="todaySchedule.length === 0">
+                <div class="schedule-empty">&#128197; No jobs scheduled today (Sunday)</div>
+              </template>
+            </div>
+
+            <!-- For Review (Unread messages from FRIDAY) -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title" style="color: var(--blue);">For Review</span>
+                <span class="card-badge badge-blue" x-text="forReview.length + ' unread'"></span>
+              </div>
+              <div class="scroll-y-sm">
+                <template x-for="(item, idx) in forReview" :key="idx">
+                  <div class="review-item" @click="markReviewed(idx)">
+                    <div class="review-dot"></div>
+                    <div class="review-content">
+                      <div class="review-title" x-text="item.title"></div>
+                      <div class="review-meta">
+                        <span x-text="'Sent ' + item.sentTime"></span>
+                        <span x-text="item.channel"></span>
+                      </div>
+                    </div>
+                    <span class="review-icon">&#128196;</span>
+                  </div>
+                </template>
+                <div class="empty" x-show="forReview.length === 0">All caught up</div>
+              </div>
+            </div>
+
+            <!-- Inbox Feed -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Inbox Feed</span>
+                <span class="card-badge badge-green" x-text="telegramMessages.length + ' msgs'"></span>
+              </div>
+              <div class="scroll-y-sm">
+                <template x-for="msg in telegramMessages.slice(0, 15)" :key="msg.id ?? msg.telegram_message_id">
+                  <div class="inbox-item">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                      <span class="inbox-sender" x-text="msg.sender ?? 'Unknown'"></span>
+                      <span class="inbox-time" x-text="timeAgo(msg.timestamp)"></span>
+                    </div>
+                    <div class="inbox-text" x-text="msg.text?.substring(0, 120) + (msg.text?.length > 120 ? '...' : '')"></div>
+                  </div>
+                </template>
+                <div class="empty" x-show="telegramMessages.length === 0">No messages yet</div>
+              </div>
+            </div>
+
+            <!-- Open Loops -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Open Loops</span>
+              </div>
+              <div class="scroll-y-sm">
+                <template x-for="(loop, i) in memory.openLoops" :key="i">
+                  <div class="loop-item">
+                    <span class="loop-icon" x-text="loop.done ? '\u2713' : '\u25CB'"></span>
+                    <span :style="loop.done ? 'text-decoration:line-through;color:var(--text-muted)' : ''" x-text="loop.text"></span>
+                  </div>
+                </template>
+                <div class="empty" x-show="memory.openLoops.length === 0">No open loops</div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Quick Actions</span>
+              </div>
+              <div class="quick-actions">
+                <button class="qa-btn" @click="sendWs('refresh')">Check Leads</button>
+                <button class="qa-btn" @click="sendWs('refresh')">Run Ad Check</button>
+                <button class="qa-btn" @click="sendWs('refresh')">Send Brief</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 2: MONARCH ==================== -->
+      <div class="tab-panel" :class="tab === 'monarch' && 'active'">
+        <div class="split-60-40-r">
+          <!-- LEFT COL -->
+          <div class="stack">
+            <!-- KPI Row -->
+            <div class="kpi-row">
+              <div class="kpi-card">
+                <div class="kpi-label">Spend (7d)</div>
+                <div class="kpi-value" x-text="'$' + fmt(kpis.current?.spend)"></div>
+                <div class="kpi-change" :class="changeClass(kpis.changes?.spend, true)">
+                  <span x-text="fmtChange(kpis.changes?.spend)"></span>
+                </div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Leads (7d)</div>
+                <div class="kpi-value gold" x-text="kpis.current?.leads ?? '\u2014'"></div>
+                <div class="kpi-change" :class="changeClass(kpis.changes?.leads)">
+                  <span x-text="fmtChange(kpis.changes?.leads)"></span>
+                </div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">CPL</div>
+                <div class="kpi-value" :style="cplColor(kpis.current?.cpl)" x-text="kpis.current?.cpl ? '$' + fmt(kpis.current.cpl) : '\u2014'"></div>
+                <div class="kpi-change" :class="changeClass(kpis.changes?.cpl, true)">
+                  <span x-text="fmtChange(kpis.changes?.cpl)"></span>
+                </div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">CTR</div>
+                <div class="kpi-value" x-text="kpis.current?.ctr ? kpis.current.ctr.toFixed(1) + '%' : '\u2014'"></div>
+                <div class="kpi-change" :class="changeClass(kpis.changes?.ctr)">
+                  <span x-text="fmtChange(kpis.changes?.ctr)"></span>
+                </div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Reach (7d)</div>
+                <div class="kpi-value" x-text="fmtNum(kpis.current?.reach)"></div>
+              </div>
+            </div>
+
+            <!-- Trend Chart -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Daily Spend &amp; CPL</span>
+                <span class="card-badge badge-grey">Last 7 days</span>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="trendChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Campaigns Table -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Active Campaigns</span>
+                <span class="card-badge badge-green" x-text="campaigns.length + ' active'"></span>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>Campaign</th>
+                      <th>Spend</th>
+                      <th>Leads</th>
+                      <th>CPL</th>
+                      <th>CTR</th>
+                      <th>Clicks</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template x-for="c in campaigns" :key="c.campaign_id">
+                      <tr>
+                        <td class="name-col" x-text="c.campaign_name"></td>
+                        <td x-text="'$' + fmt(c.spend_7d)"></td>
+                        <td style="color:var(--gold);font-weight:600" x-text="c.leads_7d ?? 0"></td>
+                        <td :style="cplColor(c.cpl_7d)" x-text="c.cpl_7d ? '$' + fmt(c.cpl_7d) : '\u2014'"></td>
+                        <td x-text="c.ctr_7d ? c.ctr_7d.toFixed(1) + '%' : '\u2014'"></td>
+                        <td x-text="c.clicks_7d ?? 0"></td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+                <div class="empty" x-show="campaigns.length === 0">No campaign data yet</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COL -->
+          <div class="stack">
+            <!-- Revenue Tracker -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Revenue This Month</span>
+                <span class="card-badge badge-green" x-text="Math.round(revenue.current / revenue.target * 100) + '% of target'"></span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;">
+                <span class="revenue-big" x-text="'$' + fmtNum(revenue.current)"></span>
+                <span class="revenue-target" x-text="'of $' + fmtNum(revenue.target)"></span>
+              </div>
+              <div class="revenue-progress-wrap">
+                <div class="revenue-bar-bg">
+                  <div class="revenue-bar-fill" :style="'width:' + Math.min(100, Math.round(revenue.current / revenue.target * 100)) + '%'"></div>
+                </div>
+                <div class="revenue-stats">
+                  <span x-text="revenue.jobsCompleted + ' jobs completed'"></span>
+                  <span x-text="'$' + fmtNum(revenue.target - revenue.current) + ' to go'"></span>
+                </div>
+              </div>
+              <div style="display:flex;gap:16px;margin-top:14px;">
+                <div style="flex:1;text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-sm);">
+                  <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Avg Job</div>
+                  <div style="font-size:18px;font-weight:700;color:var(--text);margin-top:2px;" x-text="revenue.jobsCompleted > 0 ? '$' + Math.round(revenue.current / revenue.jobsCompleted) : '$0'"></div>
+                </div>
+                <div style="flex:1;text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-sm);">
+                  <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Jobs Needed</div>
+                  <div style="font-size:18px;font-weight:700;color:var(--text);margin-top:2px;" x-text="revenue.jobsCompleted > 0 ? Math.ceil((revenue.target - revenue.current) / (revenue.current / revenue.jobsCompleted)) : '—'"></div>
+                </div>
+                <div style="flex:1;text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:var(--radius-sm);">
+                  <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Uninvoiced</div>
+                  <div style="font-size:18px;font-weight:700;color:var(--orange);margin-top:2px;" x-text="revenue.uninvoiced"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lead Pipeline -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Lead Pipeline</span>
+                <span class="card-badge badge-grey" x-text="totalLeads + ' total'"></span>
+              </div>
+              <div class="kanban kanban-4">
+                <template x-for="stage in ['new','contacted','booked','completed']" :key="stage">
+                  <div class="kanban-col">
+                    <div class="kanban-col-title">
+                      <span x-text="stage.charAt(0).toUpperCase() + stage.slice(1)"></span>
+                      <span class="kanban-col-count" x-text="leadCounts[stage] ?? 0"></span>
+                    </div>
+                    <template x-for="lead in leadsByStatus(stage)" :key="lead.id">
+                      <div class="lead-card" :class="isStale(lead) ? 'stale' : ''">
+                        <div class="lead-name" x-text="lead.name ?? 'Unknown'"></div>
+                        <a class="lead-phone" :href="'tel:' + lead.phone" x-text="lead.phone" x-show="lead.phone"></a>
+                        <div class="lead-age" x-text="timeAgo(lead.created_at)"></div>
+                      </div>
+                    </template>
+                  </div>
+                </template>
+              </div>
+              <div class="empty" x-show="totalLeads === 0">No leads yet</div>
+            </div>
+
+            <!-- Alerts -->
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Alerts</span>
+                <span class="card-badge badge-red" x-show="alerts.length > 0" x-text="alerts.length"></span>
+              </div>
+              <div class="scroll-y-sm">
+                <template x-for="a in alerts" :key="a.id">
+                  <div class="alert-item" :class="a.severity">
+                    <div style="flex:1">
+                      <div x-text="a.message"></div>
+                      <div style="font-size:10px;color:var(--text-muted);margin-top:3px" x-text="timeAgo(a.timestamp)"></div>
+                    </div>
+                    <button class="alert-dismiss" @click="dismissAlert(a.id)">&times;</button>
+                  </div>
+                </template>
+                <div class="empty" x-show="alerts.length === 0">All clear</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 3: VENTURES ==================== -->
+      <div class="tab-panel" :class="tab === 'ventures' && 'active'">
+        <div class="venture-grid">
+          <template x-for="v in ventures" :key="v.name">
+            <div class="venture-card" :class="['v-' + v.class, expandedVenture === v.name && 'expanded']" @click="expandedVenture = expandedVenture === v.name ? null : v.name">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div>
+                  <div class="venture-name" x-text="v.name"></div>
+                  <div class="venture-status">
+                    <span class="card-badge" :class="'badge-' + v.badgeColor" x-text="v.status"></span>
+                  </div>
+                </div>
+                <span style="font-size:24px" x-text="v.icon"></span>
+              </div>
+              <div class="venture-details" x-html="v.details"></div>
+              <div class="venture-expand" x-text="expandedVenture === v.name ? 'Click to collapse' : 'Click to expand'"></div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 4: AGENTS ==================== -->
+      <div class="tab-panel" :class="tab === 'agents' && 'active'">
+        <!-- Agent Cards -->
+        <div class="agent-grid">
+          <template x-for="a in agents" :key="a.name">
+            <div class="agent-card">
+              <div class="agent-icon" x-text="a.icon"></div>
+              <div class="agent-name" x-text="a.name"></div>
+              <div class="agent-role" x-text="a.role"></div>
+              <div class="agent-status">
+                <span class="card-badge" :class="'badge-' + a.statusColor" x-text="a.status"></span>
+              </div>
+              <div class="agent-task" x-text="a.task"></div>
+            </div>
+          </template>
+        </div>
+
+        <div class="split-60-40">
+          <!-- Build Log -->
+          <div class="card">
+            <div class="card-hdr">
+              <span class="card-title">Build Log</span>
+              <span class="card-badge badge-grey" x-text="agentActivity.length + ' events'"></span>
+            </div>
+            <div class="build-log">
+              <template x-for="ev in agentActivity" :key="ev.id ?? ev.timestamp">
+                <div class="log-item">
+                  <div class="log-dot"></div>
+                  <div style="flex:1">
+                    <div class="log-msg" x-text="ev.summary ?? ev.event_type"></div>
+                    <div class="log-time" x-text="timeAgo(ev.timestamp)"></div>
+                  </div>
+                </div>
+              </template>
+              <div class="empty" x-show="agentActivity.length === 0">No build events yet</div>
+            </div>
+          </div>
+
+          <!-- Scheduled Triggers -->
+          <div class="card">
+            <div class="card-hdr">
+              <span class="card-title">Scheduled Triggers</span>
+            </div>
+            <div class="sched-item">
+              <div>
+                <div class="sched-name">Nightly Build</div>
+                <div style="font-size:11px;color:var(--text-muted)">FORGE auto-picks highest-priority task</div>
+              </div>
+              <div class="sched-time">2:00 AM AEST</div>
+            </div>
+            <div class="sched-item">
+              <div>
+                <div class="sched-name">Code Review</div>
+                <div style="font-size:11px;color:var(--text-muted)">FORGE reviews last build output</div>
+              </div>
+              <div class="sched-time">6:47 AM AEST</div>
+            </div>
+            <div class="sched-item">
+              <div>
+                <div class="sched-name">Health Check</div>
+                <div style="font-size:11px;color:var(--text-muted)">All services + API connectivity</div>
+              </div>
+              <div class="sched-time">Every 4 hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- FOOTER BAR -->
+    <div class="footer-bar">
+      <span class="footer-item" style="color:var(--text-sec);font-weight:600;">FRIDAY v2.0</span>
+      <span class="footer-sep">|</span>
+      <span class="footer-item">
+        <span class="footer-dot" :class="connected ? 'ok' : 'err'"></span>
+        <span x-text="connected ? 'Session active' : 'Session offline'"></span>
+      </span>
+      <span class="footer-sep">|</span>
+      <span class="footer-item">
+        <span class="footer-dot" :class="services.telegram ? 'ok' : 'err'"></span>
+        Telegram
+      </span>
+      <span class="footer-sep">|</span>
+      <span class="footer-item">
+        <span class="footer-dot" :class="services.jobber ? 'ok' : 'err'"></span>
+        Jobber
+      </span>
+      <span class="footer-sep">|</span>
+      <span class="footer-item">
+        <span class="footer-dot" :class="services.metaAds ? 'ok' : 'err'"></span>
+        Meta Ads
+      </span>
+    </div>
+
+  </div><!-- /main-wrap -->
+
+  <script>
+  function missionControl() {
+    return {
+      // State
+      tab: 'ops',
+      connected: false,
+      wsReconnecting: false,
+      ws: null,
+      wsRetryCount: 0,
+      clock: '',
+      lastUpdated: '',
+      trendChart: null,
+      expandedVenture: null,
+
+      // Data
+      kpis: { current: {}, previous: {}, changes: {} },
+      campaigns: [],
+      leads: [],
+      leadCounts: {},
+      alerts: [],
+      memory: { openLoops: [], currentFocus: [] },
+      telegramMessages: [],
+      agentActivity: [],
+
+      // Weather
+      weather: { loaded: false, temp: 0, condition: '', rainChance: 0, humidity: 0, wind: 0 },
+
+      // Quick Stats
+      quickStats: { spendToday: 4.82, leadsToday: 1, jobsThisWeek: 5, revenueMtd: 3400, uninvoiced: 2 },
+
+      // Revenue Tracker (hardcoded sample data - will pull from /api/jobber/stats)
+      revenue: { current: 3400, target: 8000, jobsCompleted: 17, uninvoiced: 2 },
+
+      // Today's Schedule (hardcoded - will pull from /api/jobber/today)
+      todaySchedule: [],
+
+      // Service connectivity
+      services: { telegram: true, jobber: false, metaAds: true },
+
+      // Pending Approvals
+      pendingApprovals: [
+        {
+          type: 'Campaign Change',
+          title: 'Increase daily ad budget to $15/day',
+          description: 'Current $10/day cap limiting reach. Recommend gradual increase to test performance at higher spend.',
+          requested: '29 Mar, 2:00pm',
+          impact: 'Budget +$35/week',
+        },
+        {
+          type: 'External Comms',
+          title: 'Follow-up email to 3 stale leads',
+          description: 'Leads from last week (Jake M, Sarah T, Michael R) haven\'t responded to initial contact. Draft follow-up ready.',
+          requested: '29 Mar, 11:30am',
+          impact: 'Customer-facing',
+        },
+        {
+          type: 'Campaign Change',
+          title: 'Pause "Paint Protection" ad set',
+          description: 'CTR dropped below 0.5% over last 3 days. Recommend pausing to avoid wasted spend while new creative is prepared.',
+          requested: '29 Mar, 9:00am',
+          impact: 'Saves ~$4/day',
+        },
+      ],
+
+      // For Review (FRIDAY messages not yet acknowledged)
+      forReview: [
+        { title: 'Drone Pressure Washing Report', sentTime: '1:30pm, 29 Mar', channel: 'Telegram' },
+        { title: 'Compound Recommendations - Detailing Shed', sentTime: '1:00pm, 29 Mar', channel: 'Telegram' },
+        { title: 'Pricing Analysis & Recommendations', sentTime: '12:00pm, 29 Mar', channel: 'Telegram' },
+        { title: 'Avantguard 10yr Coating Research', sentTime: '11:00am, 29 Mar', channel: 'Telegram' },
+      ],
+
+      // Task board
+      tasks: {
+        todo: [
+          { title: 'Job ad for polisher', priority: 'P1', date: '29 Mar' },
+          { title: 'Service menu PDF', priority: 'P1', date: '29 Mar' },
+          { title: 'SOP framework build', priority: 'P1', date: '29 Mar' },
+          { title: 'Pre-Sale ad campaign', priority: 'P1', date: '30 Mar' },
+          { title: 'Jeff website email', priority: 'P2', date: '30 Mar' },
+          { title: 'Jobber OAuth setup', priority: 'P0', date: '29 Mar' },
+          { title: 'WordPress access', priority: 'P2', date: '30 Mar' },
+          { title: 'GMB access', priority: 'P2', date: '30 Mar' },
+        ],
+        doing: [
+          { title: 'Mission Control v2 build', priority: 'P0', date: '29 Mar' },
+        ],
+        done: [
+          { title: 'Campaign consolidation', priority: 'P0', date: '28 Mar' },
+          { title: 'Retargeting audience', priority: 'P1', date: '28 Mar' },
+          { title: 'Service menu v2.1', priority: 'P1', date: '28 Mar' },
+          { title: 'Seat shampoo SOP', priority: 'P2', date: '27 Mar' },
+          { title: 'Paint correction SOP', priority: 'P2', date: '27 Mar' },
+          { title: 'Avantguard research', priority: 'P2', date: '27 Mar' },
+          { title: 'Drone PW research', priority: 'P2', date: '27 Mar' },
+          { title: 'ChatGPT export absorbed', priority: 'P2', date: '28 Mar' },
+          { title: 'Two-way Telegram bot', priority: 'P0', date: '28 Mar' },
+          { title: 'Compound recommendations', priority: 'P1', date: '28 Mar' },
+        ],
+      },
+
+      todayPriorities: [
+        'Jobber OAuth setup \u2014 unblock CRM integration',
+        'Mission Control v2 \u2014 ship the dashboard rebuild',
+        'Job ad for polisher \u2014 post on Seek/Gumtree',
+        'Service menu PDF \u2014 finalise for client distribution',
+        'SOP framework \u2014 template for all future SOPs',
+      ],
+
+      // Ventures
+      ventures: [
+        {
+          name: 'Monarch Detailing',
+          status: 'Active',
+          class: 'active',
+          badgeColor: 'green',
+          icon: '\uD83D\uDE97',
+          details: '<strong>Revenue generating.</strong> Mobile car detailing, paint correction & PPF for luxury vehicles in Brisbane.<br>Break-even: ~35 jobs/month at $200 avg.<br>Monthly costs: ~$7,000 (van + detailer + supplies).<br>Growth lever: Meta Ads at $500-1K/month.'
+        },
+        {
+          name: 'Highline Exotics',
+          status: 'Setup',
+          class: 'setup',
+          badgeColor: 'yellow',
+          icon: '\uD83C\uDFCE\uFE0F',
+          details: '<strong>Turo Mercedes rental.</strong> ERP built (Highline OS).<br>Next: Vehicle acquisition, insurance, Turo listing setup.<br>Target: passive income stream from luxury car rentals.'
+        },
+        {
+          name: 'Drone Pressure Washing',
+          status: 'Research',
+          class: 'research',
+          badgeColor: 'grey',
+          icon: '\uD83D\uDEE9\uFE0F',
+          details: '<strong>Research phase.</strong> CASA regulations, factory/warehouse targets, competitor analysis.<br>Key questions: licensing requirements, equipment costs, insurance.<br>Potential: high-margin commercial cleaning with drone tech.'
+        },
+        {
+          name: 'Avantguard Ceramics',
+          status: 'Future',
+          class: 'future',
+          badgeColor: 'grey',
+          icon: '\uD83D\uDEE1\uFE0F',
+          details: '<strong>Certification needed.</strong> Premium ceramic coating brand.<br>Requires: product training, certification course, initial inventory.<br>Upsell path from existing Monarch detailing clients.'
+        },
+        {
+          name: 'Airbnb / Property',
+          status: 'Research',
+          class: 'research',
+          badgeColor: 'grey',
+          icon: '\uD83C\uDFE0',
+          details: '<strong>Research phase.</strong> Short-term rental property investment.<br>Exploring: Brisbane market, regulations, management options.<br>Timeline: medium-term once cash flow stabilises.'
+        },
+      ],
+
+      // Agents
+      agents: [
+        { name: 'FORGE', role: 'Code & Builds', icon: '\u2692\uFE0F', status: 'Active', statusColor: 'green', task: 'Mission Control v2 rebuild' },
+        { name: 'JARVIS', role: 'Ad Optimisation', icon: '\uD83D\uDCCA', status: 'Standby', statusColor: 'yellow', task: 'Awaiting next ad check cycle' },
+        { name: 'SCOUT', role: 'Research & Intel', icon: '\uD83D\uDD0D', status: 'Standby', statusColor: 'yellow', task: 'Competitor monitoring' },
+        { name: 'PULSE', role: 'Reports & Briefs', icon: '\uD83D\uDCC8', status: 'Standby', statusColor: 'yellow', task: 'Next brief: Monday 7am' },
+        { name: 'MUSE', role: 'Creative & Copy', icon: '\uD83C\uDFA8', status: 'Standby', statusColor: 'yellow', task: 'Awaiting creative brief' },
+      ],
+
+      get totalLeads() { return this.leads.length; },
+      get monarchBadgeCount() { return this.revenue.uninvoiced + this.alerts.length; },
+
+      // ===== INIT =====
+      async init() {
+        this.updateClock();
+        setInterval(() => this.updateClock(), 1000);
+        await this.fetchAll();
+        this.fetchWeather();
+        this.connectWs();
+        setInterval(() => this.fetchAll(), 60000);
+        // Refresh weather every 15 minutes
+        setInterval(() => this.fetchWeather(), 900000);
+      },
+
+      switchTab(newTab) {
+        this.tab = newTab;
+      },
+
+      updateClock() {
+        this.clock = new Date().toLocaleTimeString('en-AU', {
+          timeZone: 'Australia/Brisbane',
+          hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        }) + ' AEST';
+      },
+
+      // ===== DATA FETCHING =====
+      async fetchAll() {
+        await Promise.all([
+          this.fetchKpis(),
+          this.fetchCampaigns(),
+          this.fetchLeads(),
+          this.fetchAlerts(),
+          this.fetchMemory(),
+          this.fetchTrends(),
+          this.fetchTelegram(),
+          this.fetchAgentActivity(),
+        ]);
+        this.lastUpdated = new Date().toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+      },
+
+      async fetchKpis() {
+        try { this.kpis = await (await fetch('/api/kpis')).json(); } catch(e) { console.error('KPI:', e); }
+      },
+      async fetchCampaigns() {
+        try { this.campaigns = await (await fetch('/api/campaigns')).json(); } catch(e) { console.error('Campaigns:', e); }
+      },
+      async fetchLeads() {
+        try {
+          const d = await (await fetch('/api/leads')).json();
+          this.leads = d.leads ?? [];
+          this.leadCounts = d.counts ?? {};
+        } catch(e) { console.error('Leads:', e); }
+      },
+      async fetchAlerts() {
+        try { this.alerts = await (await fetch('/api/alerts')).json(); } catch(e) { console.error('Alerts:', e); }
+      },
+      async fetchMemory() {
+        try { this.memory = await (await fetch('/api/memory')).json(); } catch(e) { console.error('Memory:', e); }
+      },
+      async fetchTrends() {
+        try {
+          const data = await (await fetch('/api/kpis/trends?days=7')).json();
+          if (this.tab === 'monarch') this.renderTrendChart(data);
+          else this._trendData = data;
+        } catch(e) { console.error('Trends:', e); }
+      },
+      async fetchTelegram() {
+        try { this.telegramMessages = await (await fetch('/telegram/messages?limit=20')).json(); } catch(e) { console.error('Telegram:', e); }
+      },
+      async fetchAgentActivity() {
+        try { this.agentActivity = await (await fetch('/api/agent/activity?limit=30')).json(); } catch(e) { console.error('Activity:', e); }
+      },
+
+      // ===== WEATHER =====
+      async fetchWeather() {
+        try {
+          const res = await fetch('https://wttr.in/Gold+Coast?format=j1');
+          const data = await res.json();
+          const current = data.current_condition?.[0];
+          const hourly = data.weather?.[0]?.hourly;
+          if (current) {
+            this.weather.temp = parseInt(current.temp_C);
+            this.weather.condition = current.weatherDesc?.[0]?.value ?? 'Unknown';
+            this.weather.humidity = parseInt(current.humidity);
+            this.weather.wind = parseInt(current.windspeedKmph);
+            // Get rain chance from closest hourly forecast
+            const hour = new Date().getHours();
+            const closest = hourly?.reduce((prev, curr) => {
+              return Math.abs(parseInt(curr.time) / 100 - hour) < Math.abs(parseInt(prev.time) / 100 - hour) ? curr : prev;
+            });
+            this.weather.rainChance = closest ? parseInt(closest.chanceofrain) : 0;
+            this.weather.loaded = true;
+          }
+        } catch(e) {
+          console.error('Weather:', e);
+          // Fallback so UI isn't stuck on loading
+          this.weather = { loaded: true, temp: 24, condition: 'Data unavailable', rainChance: 0, humidity: 0, wind: 0 };
+        }
+      },
+
+      weatherIcon(condition) {
+        if (!condition) return '\u2601';
+        const c = condition.toLowerCase();
+        if (c.includes('sun') || c.includes('clear')) return '\u2600\uFE0F';
+        if (c.includes('partly') || c.includes('cloud')) return '\u26C5';
+        if (c.includes('rain') || c.includes('drizzle') || c.includes('shower')) return '\uD83C\uDF27\uFE0F';
+        if (c.includes('thunder') || c.includes('storm')) return '\u26C8\uFE0F';
+        if (c.includes('fog') || c.includes('mist')) return '\uD83C\uDF2B\uFE0F';
+        if (c.includes('overcast')) return '\u2601\uFE0F';
+        return '\u2601\uFE0F';
+      },
+
+      // ===== CHART =====
+      renderTrendChart(data) {
+        if (!data && this._trendData) data = this._trendData;
+        if (!data || !data.length) return;
+
+        const ctx = document.getElementById('trendChart');
+        if (!ctx) return;
+        if (this.trendChart) this.trendChart.destroy();
+
+        const labels = data.map(d => {
+          const dt = new Date(d.date + 'T00:00:00');
+          return dt.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric' });
+        });
+
+        this.trendChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Spend ($)',
+                data: data.map(d => d.spend),
+                backgroundColor: 'rgba(212,175,55,0.4)',
+                borderColor: '#D4AF37',
+                borderWidth: 1,
+                borderRadius: 6,
+                yAxisID: 'y',
+                order: 2,
+              },
+              {
+                label: 'CPL ($)',
+                data: data.map(d => d.cpl),
+                borderColor: '#ef4444',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                pointRadius: 4,
+                pointBackgroundColor: '#ef4444',
+                type: 'line',
+                yAxisID: 'y1',
+                order: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: { color: '#999', boxWidth: 12, padding: 16, font: { size: 11 } },
+              },
+            },
+            scales: {
+              x: { grid: { color: '#1e1e28' }, ticks: { color: '#888', font: { size: 11 } } },
+              y: { position: 'left', grid: { color: '#1e1e28' }, ticks: { color: '#D4AF37', font: { size: 11 }, callback: v => '$' + v } },
+              y1: { position: 'right', grid: { display: false }, ticks: { color: '#ef4444', font: { size: 11 }, callback: v => '$' + v } },
+            },
+          },
+        });
+      },
+
+      // ===== WEBSOCKET WITH AUTO-RECONNECT =====
+      connectWs() {
+        const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        this.ws = new WebSocket(`${proto}//${location.host}/ws`);
+        this.ws.onopen = () => {
+          this.connected = true;
+          this.wsReconnecting = false;
+          this.wsRetryCount = 0;
+        };
+        this.ws.onclose = () => {
+          this.connected = false;
+          this.wsReconnecting = true;
+          // Exponential backoff: 1s, 2s, 4s, 8s, 16s, max 30s
+          const delay = Math.min(1000 * Math.pow(2, this.wsRetryCount), 30000);
+          this.wsRetryCount++;
+          setTimeout(() => this.connectWs(), delay);
+        };
+        this.ws.onerror = () => {
+          // onclose will fire after onerror, reconnect handled there
+        };
+        this.ws.onmessage = (e) => {
+          const msg = JSON.parse(e.data);
+          if (msg.type === 'refresh') this.fetchAll();
+          if (msg.type === 'new_leads') this.fetchLeads();
+          if (msg.type === 'alert') this.fetchAlerts();
+        };
+      },
+
+      sendWs(msg) {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+          this.ws.send(msg);
+        }
+      },
+
+      // ===== ACTIONS =====
+      async dismissAlert(id) {
+        await fetch(`/api/alerts/${id}`, { method: 'PATCH' });
+        this.alerts = this.alerts.filter(a => a.id !== id);
+      },
+
+      approveItem(idx) {
+        this.pendingApprovals.splice(idx, 1);
+      },
+      rejectItem(idx) {
+        this.pendingApprovals.splice(idx, 1);
+      },
+      deferItem(idx) {
+        // Move to end
+        const item = this.pendingApprovals.splice(idx, 1)[0];
+        this.pendingApprovals.push(item);
+      },
+      markReviewed(idx) {
+        this.forReview.splice(idx, 1);
+      },
+
+      // ===== HELPERS =====
+      leadsByStatus(status) { return this.leads.filter(l => l.status === status); },
+
+      isStale(lead) {
+        if (!lead.created_at) return false;
+        return (Date.now() - new Date(lead.created_at).getTime()) > 86400000 && lead.status === 'new';
+      },
+
+      prioColor(p) {
+        if (p === 'P0') return 'red';
+        if (p === 'P1') return 'yellow';
+        return 'grey';
+      },
+
+      fmt(n) { return n == null ? '\u2014' : parseFloat(n).toFixed(2); },
+      fmtNum(n) { return n == null ? '\u2014' : parseInt(n).toLocaleString('en-AU'); },
+
+      fmtChange(pct) {
+        if (pct == null) return '';
+        return (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
+      },
+
+      changeClass(pct, invertGood = false) {
+        if (pct == null) return 'neutral';
+        if (invertGood) return pct <= 0 ? 'up' : 'down';
+        return pct >= 0 ? 'up' : 'down';
+      },
+
+      cplColor(cpl) {
+        if (!cpl) return '';
+        if (cpl <= 20) return 'color: var(--green)';
+        if (cpl <= 30) return 'color: var(--yellow)';
+        return 'color: var(--red)';
+      },
+
+      timeAgo(dateStr) {
+        if (!dateStr) return '';
+        const diff = Date.now() - new Date(dateStr).getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return 'just now';
+        if (mins < 60) return mins + 'm ago';
+        const hrs = Math.floor(mins / 60);
+        if (hrs < 24) return hrs + 'h ago';
+        return Math.floor(hrs / 24) + 'd ago';
+      },
+    };
+  }
+  </script>
+</body>
+</html>

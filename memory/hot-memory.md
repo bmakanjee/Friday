@@ -19,13 +19,12 @@ condense_to: memory/patterns/
 
 ## Active campaigns (updated Mar 31)
 
-- Lead form: $15/day (winners consolidated + video retargeting)
-- Direct booking: $15/day (G Wagon reel → monarchdetailing.com.au/book/) — 116 LPVs day 1, 0 bookings
-- Jobber traffic: $3/day (underspending at $0.10/day actual)
-- Campaign 3 (Amit's): STILL ACTIVE at $21/day — MUST BE PAUSED (adset budgets overriding)
-- Total actual: $37.57/day (13.9% over $33 target, caused by C3)
-- Blended CPL: $47.82 (target $25). Best adset: Consolidated Winners at $16.87 CPL.
-- Best placement: FB Reels ($18.90 CPL). Best demo: Males 35-44 ($21.51 CPL).
+- Lead form: $15/day (winners consolidated + video retargeting). Reels+Stories only (Feed removed Mar 31). Age narrowed to 30-50.
+- Direct booking: $15/day (G Wagon reel → monarchdetailing.com.au/book/) — strong LPVs, 0 bookings yet
+- Jobber traffic: $3/day
+- Campaign 2 (Feb 7 LG): DEAD since Mar 28, $0 spend. Was bleeding $93/day before cleanup.
+- Current CPL: $37-42 (last 3 days). Target $25. Placement fix should improve.
+- VERIFIED: FB Reels $18.90 CPL (best). Males 35-44 $21.51 CPL (best demo). FB Feed $213 CPL (worst, now removed).
 
 ## Scheduled monitoring (Telegram)
 

@@ -77,18 +77,27 @@ async function processUpdate(update: any) {
 
   // Handle text messages
   if (message.text) {
-    // Skip bot commands that start with /
     const text = message.text;
+
+    // Capture quoted/replied message context
+    const replyTo = message.reply_to_message;
+    let replyContext = "";
+    if (replyTo) {
+      const replyText = replyTo.text ?? replyTo.caption ?? "(media)";
+      replyContext = `[Reply to: "${replyText.substring(0, 100)}"] `;
+    }
+
+    const fullText = replyContext + text;
 
     db.run(
       `INSERT INTO telegram_messages (telegram_message_id, chat_id, sender, message_type, text, timestamp)
        VALUES (?, ?, ?, 'text', ?, ?)`,
-      [messageId, chatId, from, text, timestamp]
+      [messageId, chatId, from, fullText, timestamp]
     );
 
-    appendToInbox(text, null, timestamp);
+    appendToInbox(fullText, null, timestamp);
     await sendReply("Noted — added to inbox.");
-    console.log(`[telegram-poller] Text: ${text.substring(0, 60)}`);
+    console.log(`[telegram-poller] Text: ${fullText.substring(0, 80)}`);
     return;
   }
 

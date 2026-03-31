@@ -47,8 +47,11 @@ connected:
 
 - Never claim capabilities not possessed (Jarvis claimed it could watch videos — it couldn't)
 - Route specialist work to sub-agents, don't do it directly
+- 2026-03-31 | CRITICAL: ALWAYS verify agent output before sending to Braj. JARVIS gave false data (said C3 active at $21/day when it was C2 and already dead). THE RULE: Pull the same data independently, cross-check key numbers, only send verified data. Agents are researchers, FRIDAY is the fact-checker. Never forward unverified agent reports.
 - Operational fixes don't need approval — just do them
 - Customer messages: draft and show before sending. Always include at least 1 emoji.
+- 2026-03-31 | Website/SEO guardrails: Never modify live website without explicit approval. Draft all changes first, get sign-off, then implement. No auto-publishing. No deleting pages. No changing URLs without redirect plan. WordPress access = read + draft only until approved.
+- 2026-03-31 | Instagram handle is @monarch.detailing (NOT @monarch_detail). Use existing Meta Graph API for IG monitoring — same API as ads.
 - 2026-03-30 | DO NOT send email confirmations to customers. Jobber confirmations = manual via UI only. FRIDAY branded emails = NOT approved for customer-facing sends. Draft only, never send without explicit approval.
 - 2026-03-28 | Telegram line break bug: Claude Code channel handler may truncate messages after line breaks. If a Telegram message seems incomplete, ask the user to resend the rest or send as separate messages. Use Shift+Enter for line breaks on Telegram.
 - 2026-03-29 | Telegram scheduler one-shot jobs don't fire reliably (runCount stays 0). THE RULE: For urgent/immediate Telegram sends, use direct Bot API call via curl instead of mcp__telegram_scheduler__schedule_job with one-shot. Scheduler is fine for recurring jobs.

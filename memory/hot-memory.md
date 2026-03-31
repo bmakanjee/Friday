@@ -17,12 +17,15 @@ condense_to: memory/patterns/
 - Braj finishes uncle's job Apr 17 → Thailand → full Monarch focus
 - Sukhinder lead (Mar 29, Yarrabilba, too far) — text sent
 
-## Active campaigns (updated Mar 30)
+## Active campaigns (updated Mar 31)
 
 - Lead form: $15/day (winners consolidated + video retargeting)
-- Direct booking: $15/day (G Wagon reel → monarchdetailing.com.au/book/)
-- Jobber traffic: $3/day
-- Total: $33/day. A/B test ends Apr 12.
+- Direct booking: $15/day (G Wagon reel → monarchdetailing.com.au/book/) — 116 LPVs day 1, 0 bookings
+- Jobber traffic: $3/day (underspending at $0.10/day actual)
+- Campaign 3 (Amit's): STILL ACTIVE at $21/day — MUST BE PAUSED (adset budgets overriding)
+- Total actual: $37.57/day (13.9% over $33 target, caused by C3)
+- Blended CPL: $47.82 (target $25). Best adset: Consolidated Winners at $16.87 CPL.
+- Best placement: FB Reels ($18.90 CPL). Best demo: Males 35-44 ($21.51 CPL).
 
 ## Scheduled monitoring (Telegram)
 

@@ -11,6 +11,7 @@
 - [DONE] Mission Control v2 command centre enhancements — weather widget (wttr.in), revenue tracker, daily schedule, quick stats bar, notification badges, footer status bar — 2026-03-29
 - [DONE] Fix SQL injection in `/api/leads` status query — parameterised all 4 interpolated queries in api.ts — 2026-03-31
 - [DONE] Dynamic kanban task board — tasks table + CRUD API + dynamic frontend with add/move/delete, category pills, priority badges, 30s auto-refresh, seeded with current backlog — 2026-03-31
+- [DONE] UI/UX overhaul — Mac OS + Google Analytics redesign: light/dark mode, frosted glass sidebar, multicolour accents, GA-style KPI cards, coloured lead pipeline, agent pulse dots, responsive 1920/1366px — 2026-03-31
 - [ ] Add error state UI — show user-facing errors when Meta API fails instead of silent failure
 - [ ] Lead deduplication — prevent duplicate leads if Meta returns the same lead twice across collections
 
@@ -30,7 +31,7 @@
 ## [P2] — Nice-to-have
 
 - [ ] CSV export — download KPIs, campaigns, and leads as CSV
-- [ ] Dark/light theme toggle
+- [DONE] Dark/light theme toggle — 2026-03-31 (shipped with UI overhaul)
 - [ ] Notification sound on new lead (browser notification API)
 - [ ] Lead notes — editable notes field per lead in pipeline view
 - [ ] Historical CPL trend chart — 30-day view

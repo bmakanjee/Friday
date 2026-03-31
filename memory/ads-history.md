@@ -55,9 +55,30 @@ connected:
 | Amit's Luxury Interest (17 Feb adset) | $87.77 CPL, Advantage Audience ON, broad geo | 2026-03-28 |
 | MANUS Optimized ALL Gold Coast | $0 leads, 1.0% CTR, $3.53 CPC — paused | 2026-03-28 |
 
+## Placement performance (verified Mar 31)
+| Placement | CPL | Leads | % of Spend | Verdict |
+|-----------|-----|-------|-----------|---------|
+| Facebook Reels | $18.90 | 6 | 21.6% | BEST — scale |
+| Facebook Stories | $12.26 | 1 | 2.3% | Promising — test more |
+| Instagram Feed | $34.58 | 2 | 13.1% | Acceptable |
+| Facebook Feed | $213.78 | 1 | 40.6% | WORST — restrict |
+| Instagram Reels | - | 0 | 9.6% | Zero leads — monitor |
+| Instagram Stories | - | 0 | 7.4% | Good traffic (40 LPVs), no leads |
+
+## Demographic performance (verified Mar 31)
+| Segment | CPL | Leads | Verdict |
+|---------|-----|-------|---------|
+| Males 35-44 | $21.51 | 5 | BEST — target aggressively |
+| Males 65+ | $28.30 | 1 | Decent but small |
+| Females 35-44 | $57.50 | 1 | Expensive |
+| Males 45-54 | $57.93 | 2 | Overspending |
+| Females 45-54 | $76.57 | 1 | Worst converters |
+
 ## Testing log
 ### Active tests
-- [ ] Diagnose lead slowdown — creative fatigue vs audience saturation vs Amit performance
+- [ ] A/B test: Lead form ($15/day) vs Direct booking ($15/day) — started Mar 29-30, review Apr 12
+- [ ] Direct Booking: 116 LPVs on day 1, 0 bookings. Monitor until Apr 4.
+- [ ] Diagnose: is FB Feed overspend algorithm-driven or targeting-driven?
 
 ### Completed tests
-- No data yet — need MCP access to pull historical performance
+- 2026-03-31 | Deep analysis completed: C3 confirmed worst performer, Consolidated Winners best adset, FB Reels best placement, Males 35-44 best demographic

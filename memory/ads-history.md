@@ -3,7 +3,7 @@ node_type: knowledge
 status: active
 tier: deep
 created: 2026-03-28
-updated: 2026-03-28
+updated: 2026-04-06
 cap: 200 lines then archive
 connected:
   - "[[memory/business-knowledge]]"
@@ -17,9 +17,14 @@ connected:
 - Formula: show disgust then delight, satisfying visuals, ASMR-like audio
 - Top performing content: Ferrari 488 Full Detail (312 likes), AMG GT Interior (234 likes), Porsche 911 (189 likes)
 - Lead form on website converts better than direct Jobber booking for paid traffic
+- Lead form campaign (Apr 4): best day = 3 leads at $5.20 CPL. "MANUS - High Income Ad" generates 100% of leads.
+- Apr 13 analysis: MANUS High Income Ad carrying entire lead campaign since Mar 25. 7 leads in last 7 days at $19.37 CPL. Hit 3-day zero-lead dry spell Apr 10-12 ($55 burned) — classic single-creative fatigue. G Wagon reel added Apr 9 but Meta's algorithm starved it ($2.23 total spend). Need 3+ creatives loaded for proper split testing.
+- Messages campaign (Apr 9-12): 4 DM conversations at $8.91/each. Conversion unknown — depends on Braj's DM replies.
 
-## What doesn't work
+## What doesn't work (updated Apr 6)
+- Direct Booking via Jobber request form: 792 clicks, 0 conversions in 7 days. Ad works, landing page kills it.
 - Amit currently getting $20/lead vs $5 target — 4x above benchmark
+
 - Leads have slowed recently (as of 2026-03-28) — needs diagnosis
 - Static image posts underperform reels significantly
 
@@ -76,9 +81,10 @@ connected:
 
 ## Testing log
 ### Active tests
-- [ ] A/B test: Lead form ($15/day) vs Direct booking ($15/day) — started Mar 29-30, review Apr 12
-- [ ] Direct Booking: 116 LPVs on day 1, 0 bookings. Monitor until Apr 4.
+- [ ] A/B test: Lead form ($20/day) vs Direct booking ($10/day) — rebalanced Apr 5. Direct booking has 792 clicks, 0 bookings after 7 days. Landing page is the bottleneck, not the ad.
+- [ ] Diagnose: is Jobber Cloudflare challenge blocking mobile users from booking page?
 - [ ] Diagnose: is FB Feed overspend algorithm-driven or targeting-driven?
 
 ### Completed tests
 - 2026-03-31 | Deep analysis completed: C3 confirmed worst performer, Consolidated Winners best adset, FB Reels best placement, Males 35-44 best demographic
+- 2026-04-06 | Direct Booking campaign audit: 792 clicks in 7 days (Mar 30-Apr 5), $103 spend, ZERO bookings. Ad performance is excellent (6.87% CTR, $0.13 CPC) but conversion is broken. Likely causes: (1) Jobber "request" form is a lead form not instant booking - friction kills conversion, (2) Cloudflare challenge may block mobile users, (3) no pricing/branding on landing page. Recommendation: needs Jobber online scheduling (pick date + service) instead of request form, or redirect budget to lead form campaign.

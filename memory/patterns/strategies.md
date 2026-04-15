@@ -12,6 +12,13 @@ updated: 2026-03-30
 
 ## Active strategies
 
+*2026-04-09*
+
+### Lead follow-up — PHONE CALLS > TEXTS
+- Meta lead form customers do NOT read initial text messages. When Braj called Apr 9 leads, they were completely new to him — remembered the form but never saw texts.
+- Half said "just finding the time", other half keen to book immediately when called.
+- THE RULE: Phone calls are the primary follow-up method. Texts are supplementary. Always recommend calling over texting for lead conversion.
+
 *2026-03-29*
 
 ### Pre-Sale Detail — paid advertising
@@ -102,6 +109,29 @@ updated: 2026-03-30
 *2026-03-30*
 - Prong 1 (Influencer collabs): Female influencers / OF creators on Gold Coast with luxury lifestyle content. Audience overlap with detailing target market. Offer free detail in exchange for content + shoutout.
 - Prong 2 (Business outreach): Body shops, dealerships, real estate agencies via Instagram DMs. Research safe prospecting tools at scale — Phantombuster, Apify, or manual.
+
+### Lead Management Workflow (approved Apr 4)
+*2026-04-04*
+- Detection: check Meta form leads every 4 hours (not 30 min — too noisy)
+- Alert format: send to Telegram with phone number + ready-to-copy message
+- Status tracking in MC SQLite: new → contacted → booked → lost
+- Follow-up: 24hr no reply = reminder, 48hr = going cold, 7 days = lost
+- When booked: create client + job in Jobber via API
+- After job: trigger Google review request (g.page/r/Ceh0DKXd8JDLEAI/review)
+- Braj sends all customer messages himself — FRIDAY drafts only
+
+### Lead Response Templates (approved Apr 4)
+*2026-04-04*
+- Standard Signature Detail msg: "Hey [Name]! Harry from Monarch Detailing here 👑 Thanks for reaching out! We service [Area] regularly so timing works out well. Signature Detail is $199 (sedan) / $219 (SUV/4WD) - full interior and exterior, we come to you. Just need access to a power point and tap. We've got availability from [day] - what day suits you best?"
+- Executive Detail msg: Longer, emphasise comprehensive package ($499), mention paint decontamination, leather conditioning, engine bay. More premium tone.
+- Rules: No em dash. Always mention power/water access. Always include 👑. Personalise to area. Mention availability day.
+- Braj sends these himself — FRIDAY drafts, Braj sends.
+
+### Ad Creative Performance (Apr 4)
+*2026-04-04*
+- "MANUS - High Income Ad - March 25" is producing ALL leads. Every single one came from this ad on Facebook (not Instagram).
+- Consider scaling this ad or replicating its targeting/creative for new adsets.
+- Direct Booking campaign gets traffic but 0 bookings — needs Jobber link swap (pending approval).
 
 ## Tested and validated
 

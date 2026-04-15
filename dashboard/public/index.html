@@ -1749,7 +1749,7 @@
                 <div class="sched-name">Health Check</div>
                 <div style="font-size:11px;color:var(--text-muted)">All services + API connectivity</div>
               </div>
-              <div class="sched-time">Every 4 hours</div>
+              <div class="sched-time">Every 12 hours</div>
             </div>
           </div>
         </div>
@@ -1812,8 +1812,17 @@
       // Weather
       weather: { loaded: false, temp: 0, condition: '', rainChance: 0, humidity: 0, wind: 0 },
 
-      // Quick Stats
-      quickStats: { spendToday: 4.82, leadsToday: 1, jobsThisWeek: 5, revenueMtd: 3400, uninvoiced: 2 },
+      // Quick Stats (derived from KPIs - updated on each fetch)
+      get quickStats() {
+        const k = this.kpis.current || {};
+        return {
+          spendToday: k.spend ? (k.spend / (this.kpis.period || 7)).toFixed(2) : '—',
+          leadsToday: k.leads ? Math.round(k.leads / (this.kpis.period || 7)) : 0,
+          jobsThisWeek: this.revenue.jobsCompleted || '—',
+          revenueMtd: this.revenue.current || '—',
+          uninvoiced: this.revenue.uninvoiced || 0,
+        };
+      },
 
       // Revenue Tracker (hardcoded sample data - will pull from /api/jobber/stats)
       revenue: { current: 3400, target: 8000, jobsCompleted: 17, uninvoiced: 2 },
@@ -1824,51 +1833,24 @@
       // Service connectivity
       services: { telegram: true, jobber: false, metaAds: true },
 
-      // Pending Approvals
-      pendingApprovals: [
-        {
-          type: 'Campaign Change',
-          title: 'Increase daily ad budget to $15/day',
-          description: 'Current $10/day cap limiting reach. Recommend gradual increase to test performance at higher spend.',
-          requested: '29 Mar, 2:00pm',
-          impact: 'Budget +$35/week',
-        },
-        {
-          type: 'External Comms',
-          title: 'Follow-up email to 3 stale leads',
-          description: 'Leads from last week (Jake M, Sarah T, Michael R) haven\'t responded to initial contact. Draft follow-up ready.',
-          requested: '29 Mar, 11:30am',
-          impact: 'Customer-facing',
-        },
-        {
-          type: 'Campaign Change',
-          title: 'Pause "Paint Protection" ad set',
-          description: 'CTR dropped below 0.5% over last 3 days. Recommend pausing to avoid wasted spend while new creative is prepared.',
-          requested: '29 Mar, 9:00am',
-          impact: 'Saves ~$4/day',
-        },
-      ],
+      // Pending Approvals (populated by FRIDAY via API)
+      pendingApprovals: [],
 
-      // For Review (FRIDAY messages not yet acknowledged)
-      forReview: [
-        { title: 'Drone Pressure Washing Report', sentTime: '1:30pm, 29 Mar', channel: 'Telegram' },
-        { title: 'Compound Recommendations - Detailing Shed', sentTime: '1:00pm, 29 Mar', channel: 'Telegram' },
-        { title: 'Pricing Analysis & Recommendations', sentTime: '12:00pm, 29 Mar', channel: 'Telegram' },
-        { title: 'Avantguard 10yr Coating Research', sentTime: '11:00am, 29 Mar', channel: 'Telegram' },
-      ],
+      // For Review (populated by FRIDAY via API)
+      forReview: [],
 
       // Task board (fetched from API)
       tasks: { todo: [], doing: [], done: [] },
       showTaskForm: false,
       newTask: { title: '', priority: 'P2', category: 'monarch' },
 
-      todayPriorities: [
-        'Jobber OAuth setup \u2014 unblock CRM integration',
-        'Mission Control v2 \u2014 ship the dashboard rebuild',
-        'Job ad for polisher \u2014 post on Seek/Gumtree',
-        'Service menu PDF \u2014 finalise for client distribution',
-        'SOP framework \u2014 template for all future SOPs',
-      ],
+      // todayPriorities derived from memory.openLoops (live from hot-memory.md)
+      get todayPriorities() {
+        return this.memory.openLoops
+          .filter(l => !l.done)
+          .slice(0, 8)
+          .map(l => l.text);
+      },
 
       // Ventures
       ventures: [

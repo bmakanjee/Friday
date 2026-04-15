@@ -29,7 +29,7 @@ export function readHotMemory(): HotMemoryData {
         continue;
       }
 
-      if (section === "open loops") {
+      if (section.startsWith("open loops")) {
         const checkMatch = line.match(/^- \[([ x])\] (.+)/);
         if (checkMatch) {
           openLoops.push({

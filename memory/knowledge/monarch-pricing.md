@@ -3,7 +3,7 @@ node_type: knowledge
 status: active
 tier: deep
 created: 2026-03-29
-updated: 2026-03-29
+updated: 2026-04-06
 source: Braj via Telegram (service menu v2.0, March 2026)
 connected:
   - "[[memory/business-knowledge]]"
@@ -157,6 +157,7 @@ From $1,500
 | Leather Deep Treatment | $75 |
 | Fabric Protection Coating | $80 |
 | Heavy Odour Treatment (Ozone) | $80 |
+| Seat Shampoo & Extraction | $100 |
 
 ### Exterior Add-Ons
 

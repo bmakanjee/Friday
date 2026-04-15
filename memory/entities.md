@@ -35,10 +35,10 @@ updated: 2026-03-29
 - Role: Part-time content creator (application under review)
 - Status: Pending approval
 
-### Curtis (Social Media Coach)
-- Role: Content creator/social media coaching
-- Proposal: 3-month engagement at $3k/month ($9k total)
-- Status: Quoted, decision pending
+### Curtis Walker (Content Creator)
+- Role: Content creator/social media coaching. Curtis Walker Productions, Gold Coast. Ph: 0467 998 089
+- Cost: $2,700/month, billed 8th of each month. Started Feb 8. ~8 reels/month, 2 shoot days.
+- Status: Underperforming — $337.50/reel vs $112.50 target. Deliverables not matching contract. Juan replacing. Renewal decision pending.
 
 ### Spencer / Wraptism (Van Wrap)
 - Role: Vehicle wrap specialist
@@ -64,10 +64,15 @@ updated: 2026-03-29
 
 ## Tools and services
 
+### Gmail (FRIDAY Ops)
+- Email: jarvismonarch42@gmail.com
+- Status: Active — FRIDAY's operational email until dedicated one is set up
+- Notes: Not approved for customer-facing sends. Draft only without explicit approval.
+
 ### Meta Ads
 - Account ID: TBC | Currency: AUD | Timezone: AEST
-- Connected via: Amit manages, MCP not yet connected to FRIDAY
-- Notes: API access blocked — needs Braj SMS verification
+- Connected via: MCP (meta-ads). Full API access — ads, forms, leads, audiences.
+- Notes: Rate limits apply. Use direct MCP calls, not agent delegation for routine checks.
 
 ### Google Ads
 - Managed by: Amit

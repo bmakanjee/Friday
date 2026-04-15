@@ -3,7 +3,7 @@ node_type: agent_memory
 agent: SCOUT
 status: active
 created: 2026-03-28
-updated: 2026-03-29 (Avantguard research added; compound/polish research added)
+updated: 2026-04-06 (seat shampoo/extraction competitor pricing added)
 cap: 40 lines
 ---
 
@@ -161,6 +161,37 @@ PRICES FROM WHIRLPOOL FORUMS (Australian community, ~2024-2025 data — flag as 
 ### JJ Bespoke Detailing Gold Coast — NO WEBSITE FOUND (all URL variants DNS timeout — likely social media only)
 ### KM Detailing Gold Coast — NO WEBSITE FOUND (DNS timeout)
 ### Remedy Detailing Gold Coast — NO WEBSITE FOUND (DNS timeout)
+
+## Competitor pricing — seat shampoo / upholstery extraction (researched 2026-04-06)
+
+### Key finding
+Standalone seat shampoo is rare as an explicit named service. Most operators bundle it into mid-tier+ packages. Only one GC competitor found with a named standalone price.
+
+### Confirmed standalone prices (Brisbane + Gold Coast)
+- **Detailed GC (detailedgc.com.au)** — GC mobile — "Upholstery Seat Shampoo" = **$89** — SOURCE: Wix booking JSON, verified 2026-03-29. Interior Detail package = $99.
+- **Wash On Wheels (washonwheels.com.au)** — Brisbane CBD/30km radius — "Seat Shampoo / Leather Treatment" = **$130** AND "Upholstery Shampoo" = **$130** (separate SKUs, same price) — SOURCE: Shopify products.json, verified 2026-04-06.
+- **Jim's Car Detailing (franchise)** — Interior Detail (seats + carpets) from **$169 sedan / $189 small SUV / $209 large SUV** — this is the closest franchise equivalent to standalone interior extraction; no explicit standalone shampoo add-on found — SOURCE: website scrape in SCOUT memory.
+- **Dirt Busters (GC)** — no standalone extraction; "Full Interior Detail" = **$265 (2-door) → $325 (4x4)** — SOURCE: mobilecardetailers.com.au/car-upholstery-cleaning/ scrape, 2026-04-06.
+- **JJ Bespoke, KM Detailing, Remedy Detailing** — NO WEBSITE FOUND (all DNS timeout). No pricing available.
+- **Scrubs Car Detailing** — pricing page JS-rendered; no upholstery add-on price extractable — SOURCE: SCOUT live scrape 2026-04-06.
+- **1800 Dirty Cars** — no standalone add-on page; shampoo bundled into "Refresh" package = $285 (incl exterior) — SOURCE: website scrape, SCOUT memory.
+
+### Full interior shampoo (seats + carpets + mats)
+- Dirt Busters: $265 (2-door) → $325 (4x4) — SOURCE: verified 2026-04-06
+- Jim's: $169 (sedan) → $209 (large SUV) — includes full interior, not seats-only — SOURCE: verified
+- 1800 Dirty Cars "Refresh" (Brisbane): $285 — includes clay + shampoo + extraction + exterior — not interior-only — SOURCE: verified
+- Estimated Scrubs interior-only: $200-$300 (not publicly listed, estimate only — flag as speculation)
+
+### Mobile vs shop-based differential
+- Shop operators (Dirt Busters studio): ~$265-$325 full interior
+- Mobile operators (Detailed GC, Jim's): ~$89-$209 range for extraction-focused services
+- Mobile commands slight premium for convenience; but budget franchises undercut on seats-only
+
+### Monarch opportunity
+- Only ONE GC competitor (Detailed GC) explicitly names and prices standalone seat shampoo ($89)
+- $89 is budget positioning — Monarch at $129-$149 for seats, $199-$249 full interior extraction would be defensible premium tier
+- Equipment gate: hot water extractor (~$1,200) is a required purchase before offering this service
+- This is a price-ladder rung between Signature ($199) and Executive ($499) — high strategic value for volume + upsell
 
 ## Avant Guard / Avantguard paint protection research (2026-03-29)
 

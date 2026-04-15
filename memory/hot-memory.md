@@ -20,7 +20,7 @@ condense_to: memory/patterns/
 - Apr 7: Jamie Atthews job COMPLETED (Chevy 2500, 4/10 Ivan St Arundel, Signature Detail). B2B prospect.
 - Apr 7: Rob White Sprinter - decal glue removal INCOMPLETE. Jack couldn't get baked-on glue off. Needs 3M adhesive remover or Tardis. DO NOT use caramel block.
 - Apr 9: Puiai Maukeni — 0401 310 358, 9 Karrinyup Pl Robina, BOOKED Sat 1pm.
-- Apr 9: Peggy Hardiman — 0439 265 422, 10 Azura Way Coomera, BOOKED Tue Apr 15 2pm, Executive Detail $499, Range Rover Defender. B2B prospect (Diamond Care Support Services). Jobber #46.
+- Apr 9: Peggy Hardiman — 0439 265 422, 10 Azura Way Coomera, BOOKED Tue Apr 14 (today) 2pm, Executive Detail $499, Range Rover Defender. B2B prospect (Diamond Care Support Services). Jobber #46.
 - Apr 13: Amy Nguyen — Jobber #47 COMPLETED. Neighbour Special $125. NEEDS INVOICING.
 - Apr 9: Kayla Pinkstone — 0421 223 177, tomnkaylap@gmail.com. Lead form Apr 9. UNCONTACTED.
 - Apr 9: Michael Tuua — 0411 145 792, Marques2226@hotmail.com. Lead form Apr 9. UNCONTACTED.
@@ -28,7 +28,10 @@ condense_to: memory/patterns/
 - Apr 9: Ann dela Paz — 0473 007 456, Eagleby, Executive Detail. Msg drafted, booking next week.
 - Apr 9: Alex Lanni — 0414 751 321, Hope Island. Car getting fixed. CALL 3rd week May.
 - Apr 7: Josiah Melsom (047 415 514 - short number?), Varun Rana (0430 089 844) — still uncontacted.
-- Apr 12: Phillip White — 0407 472 883, Phillip@intrendbathrooms.com.au, 15 Meyer St Southport. BOOKED Fri Apr 17 10am. Executive Detail $499 + free engine bay ($80 value). Car has PPF/wrap matt finish. Business: Intrend Bathrooms (B2B prospect). PENDING Jobber entry.
+- Apr 12: Phillip White — 0407 472 883, Phillip@intrendbathrooms.com.au, 15 Meyer St Southport. BOOKED Fri Apr 17 8:30am-1pm. Executive Detail BMW M4 $499 + free engine bay ($80 value). Car has PPF/wrap matt finish. Business: Intrend Bathrooms (B2B prospect). Jobber #48.
+- Apr 14: Ramzy (Handyman) — 0401 123 575, 20 Kerria Crescent Ashmore. BOOKED Wed Apr 15 8:30am-2pm. Pre-Sale Detail (Ute) exterior + 1-step cut & polish (Jack). $799 booked, mates rate discount after job. Free microfibres. Jobber #50.
+- Apr 14: Luke Koning — RESCHEDULED from Wed Apr 15 to Fri Apr 17 2pm-5pm. Signature Detail Porsche 911, 112 Palm Meadows Dr Carrara. Jobber #49. Follows Phillip on same day.
+- Apr 14: Susannah Shultz (Suz) — returning customer, 15 Kambalda Court Worongary. BOOKED Thu Apr 16 1pm-5pm. Navara Ute tidy $120 + Jayco exterior wash $80 = $200 total. Jobber #51. + Rosalind — Thu Apr 16 8am, Mitsubishi ASX, PENDING contact/address/service details for Jobber entry.
 - Apr 6: Lily (CX5, Signature + Seat Shampoo) — replied. Edin (work van, Marketplace) — replied, awaiting photos.
 - Shane Daly (Arundel, Mar 30) — stale.
 
